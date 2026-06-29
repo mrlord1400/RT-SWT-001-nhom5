@@ -1,0 +1,756 @@
+story_id,source_file,domain,complexity,user_story,llm_output
+US002,g04-recycling.txt,Recycling & Facilities,Complex,"As a user, I want to be able to check transaction history and keep a record of it, so that I can go back when needed.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Transaction History
+
+  Scenario: User views transaction history
+    Given the user is logged into their account
+    When the user navigates to the transaction history page
+    Then the user should see a list of past transactions
+
+  Scenario: User downloads transaction history
+    Given the user is logged into their account
+    When the user navigates to the transaction history page
+    And the user clicks on the ""Download"" button
+    Then the user should receive a file containing the transaction history
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the user is logged into their account')
+def step_impl(context):
+    context.browser.get('https://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('user')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login-button').click()
+
+@when('the user navigates to the transaction history page')
+def step_impl(context):
+    context.browser.get('https://example.com/transaction-history')
+
+@then('the user should see a list of past transactions')
+def step_impl(context):
+    transactions = context.browser.find_elements_by_class_name('transaction')
+    assert len(transactions) > 0
+
+@when('the user clicks on the ""Download"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('download-button').click()
+
+@then('the user should receive a file containing the transaction history')
+def step_impl(context):
+    # Assuming the file is downloaded to a predefined directory
+    import os
+    import time
+
+    download_dir = '/path/to/downloads'
+    time.sleep(5)  # Wait for the download to complete
+    files = os.listdir(download_dir)
+    assert any(file.endswith('.csv') for file in files)
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user can log into their account.
+- [ ] Verify that the user can navigate to the transaction history page.
+- [ ] Verify that the transaction history page displays a list of past transactions.
+- [ ] Verify that the user can click on the ""Download"" button.
+- [ ] Verify that a file containing the transaction history is downloaded.
+- [ ] Verify that the downloaded file is in the correct format (e.g., .csv).
+- [ ] Verify that the downloaded file contains the correct transaction data."
+US006,g08-frictionless.txt,Data Packaging,Medium,"As a Researcher, I want an app that generates an OpenRefine reconciliation API endpoint from a Tabular Data Package, so that I can use it to clean messy data.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Generate OpenRefine reconciliation API endpoint from a Tabular Data Package
+
+  Scenario: Generate API endpoint from a valid Tabular Data Package
+    Given I have a valid Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive a valid API endpoint URL
+
+  Scenario: Generate API endpoint from an invalid Tabular Data Package
+    Given I have an invalid Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive an error message
+
+  Scenario: Generate API endpoint from an empty Tabular Data Package
+    Given I have an empty Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive an error message indicating the package is empty
+
+  Scenario: Generate API endpoint with missing fields in Tabular Data Package
+    Given I have a Tabular Data Package with missing fields
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive an error message indicating the missing fields
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+import requests
+
+@given('I have a valid Tabular Data Package')
+def step_given_valid_tabular_data_package(context):
+    context.tabular_data_package = {
+        ""resources"": [
+            {
+                ""name"": ""example"",
+                ""data"": [
+                    {""id"": 1, ""name"": ""John Doe""},
+                    {""id"": 2, ""name"": ""Jane Doe""}
+                ]
+            }
+        ]
+    }
+
+@given('I have an invalid Tabular Data Package')
+def step_given_invalid_tabular_data_package(context):
+    context.tabular_data_package = ""invalid_package""
+
+@given('I have an empty Tabular Data Package')
+def step_given_empty_tabular_data_package(context):
+    context.tabular_data_package = {}
+
+@given('I have a Tabular Data Package with missing fields')
+def step_given_tabular_data_package_with_missing_fields(context):
+    context.tabular_data_package = {
+        ""resources"": [
+            {
+                ""name"": ""example"",
+                ""data"": [
+                    {""id"": 1},
+                    {""id"": 2}
+                ]
+            }
+        ]
+    }
+
+@when('I request to generate an OpenRefine reconciliation API endpoint')
+def step_when_request_generate_api_endpoint(context):
+    response = requests.post(
+        'http://example.com/generate-api-endpoint',
+        json=context.tabular_data_package
+    )
+    context.response = response
+
+@then('I should receive a valid API endpoint URL')
+def step_then_receive_valid_api_endpoint(context):
+    assert context.response.status_code == 200
+    assert 'api_endpoint' in context.response.json()
+
+@then('I should receive an error message')
+def step_then_receive_error_message(context):
+    assert context.response.status_code == 400
+    assert 'error' in context.response.json()
+
+@then('I should receive an error message indicating the package is empty')
+def step_then_receive_error_message_empty_package(context):
+    assert context.response.status_code == 400
+    assert context.response.json().get('error') == 'Tabular Data Package is empty'
+
+@then('I should receive an error message indicating the missing fields')
+def step_then_receive_error_message_missing_fields(context):
+    assert context.response.status_code == 400
+    assert context.response.json().get('error') == 'Missing fields in Tabular Data Package'
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that a valid Tabular Data Package generates a valid API endpoint URL.
+- [ ] Verify that an invalid Tabular Data Package returns an error message.
+- [ ] Verify that an empty Tabular Data Package returns an error message indicating the package is empty.
+- [ ] Verify that a Tabular Data Package with missing fields returns an error message indicating the missing fields.
+- [ ] Ensure the API endpoint URL is correctly formatted and accessible.
+- [ ] Ensure error messages are clear and informative.
+- [ ] Validate the HTTP status codes for all responses.
+- [ ] Confirm that the application handles different data structures within the Tabular Data Package correctly."
+US007,g08-frictionless.txt,Data Packaging,Complex,"As a developer, I want an DSpace integration, so that I can integrate data-packaged data with pipelines that use Dspace.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: DSpace Integration
+
+  Scenario: Successful integration with DSpace
+    Given I have valid data-packaged data
+    When I integrate the data with DSpace
+    Then the data should be successfully integrated into the DSpace pipeline
+
+  Scenario: Integration with invalid data
+    Given I have invalid data-packaged data
+    When I attempt to integrate the data with DSpace
+    Then I should receive an error message indicating the data is invalid
+
+  Scenario: Integration with missing data
+    Given I have data-packaged data with missing fields
+    When I attempt to integrate the data with DSpace
+    Then I should receive an error message indicating the missing fields
+
+  Scenario: Integration with DSpace when DSpace is down
+    Given I have valid data-packaged data
+    And DSpace is currently down
+    When I attempt to integrate the data with DSpace
+    Then I should receive an error message indicating that DSpace is unavailable
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I have valid data-packaged data')
+def step_given_valid_data(context):
+    context.data = ""valid_data_package""
+
+@given('I have invalid data-packaged data')
+def step_given_invalid_data(context):
+    context.data = ""invalid_data_package""
+
+@given('I have data-packaged data with missing fields')
+def step_given_data_with_missing_fields(context):
+    context.data = ""data_package_with_missing_fields""
+
+@given('DSpace is currently down')
+def step_given_dspace_down(context):
+    context.dspace_status = ""down""
+
+@when('I integrate the data with DSpace')
+def step_when_integrate_data(context):
+    if context.dspace_status == ""down"":
+        context.response = ""DSpace is unavailable""
+    elif context.data == ""valid_data_package"":
+        context.response = ""Data successfully integrated""
+    elif context.data == ""invalid_data_package"":
+        context.response = ""Error: Invalid data""
+    elif context.data == ""data_package_with_missing_fields"":
+        context.response = ""Error: Missing fields""
+
+@when('I attempt to integrate the data with DSpace')
+def step_when_attempt_integrate_data(context):
+    step_when_integrate_data(context)
+
+@then('the data should be successfully integrated into the DSpace pipeline')
+def step_then_successful_integration(context):
+    assert context.response == ""Data successfully integrated""
+
+@then('I should receive an error message indicating the data is invalid')
+def step_then_error_invalid_data(context):
+    assert context.response == ""Error: Invalid data""
+
+@then('I should receive an error message indicating the missing fields')
+def step_then_error_missing_fields(context):
+    assert context.response == ""Error: Missing fields""
+
+@then('I should receive an error message indicating that DSpace is unavailable')
+def step_then_error_dspace_unavailable(context):
+    assert context.response == ""DSpace is unavailable""
+```
+
+### (3) Validation Checklist
+
+1. Verify that valid data-packaged data can be successfully integrated with DSpace.
+2. Verify that an error message is received when attempting to integrate invalid data-packaged data with DSpace.
+3. Verify that an error message is received when attempting to integrate data-packaged data with missing fields with DSpace.
+4. Verify that an error message is received when attempting to integrate data-packaged data with DSpace when DSpace is down.
+5. Ensure that the error messages are clear and informative.
+6. Validate that the integration process handles different data states correctly.
+7. Confirm that the system's response time is acceptable during the integration process.
+8. Ensure that the integration process does not crash or hang under any of the tested conditions.
+9. Verify that the integration process logs appropriate messages for successful and failed attempts.
+10. Ensure that the integration process adheres to any relevant security and data integrity standards."
+US008,g04-recycling.txt,Recycling & Facilities,Complex,"As a user, I want to be able to browse through the list of facolities and see which ones are environment-friendly, so that I can know for sure my waste is not going to leave a negative ecological footprint.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Browse Environment-Friendly Facilities
+
+  Scenario: User views the list of facilities
+    Given the user is on the facilities page
+    When the user browses through the list of facilities
+    Then the user should see a list of facilities
+
+  Scenario: User sees environment-friendly facilities
+    Given the user is on the facilities page
+    When the user browses through the list of facilities
+    Then the user should see which facilities are environment-friendly
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the user is on the facilities page')
+def step_given_user_on_facilities_page(context):
+    context.browser.get('http://example.com/facilities')
+
+@when('the user browses through the list of facilities')
+def step_when_user_browses_facilities(context):
+    context.facilities_list = context.browser.find_elements_by_class_name('facility')
+
+@then('the user should see a list of facilities')
+def step_then_user_sees_list_of_facilities(context):
+    assert len(context.facilities_list) > 0
+
+@then('the user should see which facilities are environment-friendly')
+def step_then_user_sees_environment_friendly_facilities(context):
+    environment_friendly_facilities = [facility for facility in context.facilities_list if 'environment-friendly' in facility.get_attribute('class')]
+    assert len(environment_friendly_facilities) > 0
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user can navigate to the facilities page.
+- [ ] Verify that the facilities page displays a list of facilities.
+- [ ] Verify that each facility in the list is displayed correctly.
+- [ ] Verify that environment-friendly facilities are clearly marked.
+- [ ] Verify that the marking for environment-friendly facilities is consistent and visible.
+- [ ] Verify that the list of facilities updates correctly when new facilities are added.
+- [ ] Verify that the user can distinguish between environment-friendly and non-environment-friendly facilities."
+US009,g24-unibath.txt,University Research Archive,Complex,"As a depositor, I want to link datasets with the project DMP, so that compliance with DMP can be demonstrated and whole project workflow is linked together.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Link datasets with the project DMP
+
+  Scenario: Link a dataset to the project DMP
+    Given I am a depositor
+    When I link a dataset to the project DMP
+    Then the dataset should be linked to the project DMP
+    And compliance with the DMP should be demonstrated
+    And the whole project workflow should be linked together
+
+  Scenario: Verify compliance with DMP after linking dataset
+    Given I have linked a dataset to the project DMP
+    When I check the compliance status
+    Then the compliance with the DMP should be demonstrated
+
+  Scenario: Verify project workflow linkage after linking dataset
+    Given I have linked a dataset to the project DMP
+    When I check the project workflow
+    Then the whole project workflow should be linked together
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a depositor')
+def step_given_i_am_a_depositor(context):
+    context.depositor = True
+
+@when('I link a dataset to the project DMP')
+def step_when_i_link_a_dataset_to_the_project_dmp(context):
+    context.dataset_linked = True
+
+@then('the dataset should be linked to the project DMP')
+def step_then_dataset_should_be_linked_to_project_dmp(context):
+    assert context.dataset_linked is True
+
+@then('compliance with the DMP should be demonstrated')
+def step_then_compliance_with_dmp_should_be_demonstrated(context):
+    assert context.dataset_linked is True  # Simplified for demonstration
+
+@then('the whole project workflow should be linked together')
+def step_then_whole_project_workflow_should_be_linked_together(context):
+    assert context.dataset_linked is True  # Simplified for demonstration
+
+@given('I have linked a dataset to the project DMP')
+def step_given_i_have_linked_a_dataset_to_the_project_dmp(context):
+    context.dataset_linked = True
+
+@when('I check the compliance status')
+def step_when_i_check_the_compliance_status(context):
+    context.compliance_checked = True
+
+@then('the compliance with the DMP should be demonstrated')
+def step_then_compliance_with_dmp_should_be_demonstrated(context):
+    assert context.compliance_checked is True
+
+@when('I check the project workflow')
+def step_when_i_check_the_project_workflow(context):
+    context.workflow_checked = True
+
+@then('the whole project workflow should be linked together')
+def step_then_whole_project_workflow_should_be_linked_together(context):
+    assert context.workflow_checked is True
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is identified as a depositor.
+- [ ] Verify that a dataset can be linked to the project DMP.
+- [ ] Verify that the dataset is successfully linked to the project DMP.
+- [ ] Verify that compliance with the DMP is demonstrated after linking the dataset.
+- [ ] Verify that the whole project workflow is linked together after linking the dataset.
+- [ ] Verify that compliance status can be checked after linking the dataset.
+- [ ] Verify that the project workflow can be checked after linking the dataset."
+US015,g03-loudoun.txt,Government Services,Complex,"As an Applicant, I want to Complete Building Development Project, so that I can receive any posted bond and/or obtain occupancy.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Complete Building Development Project
+
+  Scenario: Applicant completes the building development project
+    Given the applicant has a building development project
+    When the applicant marks the project as complete
+    Then the system should validate the project completion
+    And the system should release any posted bond
+    And the system should update the occupancy status
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the applicant has a building development project')
+def step_impl(context):
+    context.project = get_applicant_project()
+    assert context.project is not None
+
+@when('the applicant marks the project as complete')
+def step_impl(context):
+    context.project.mark_as_complete()
+
+@then('the system should validate the project completion')
+def step_impl(context):
+    assert context.project.is_validated()
+
+@then('the system should release any posted bond')
+def step_impl(context):
+    assert context.project.bond_released()
+
+@then('the system should update the occupancy status')
+def step_impl(context):
+    assert context.project.occupancy_status_updated()
+```
+
+### (3) Validation Checklist
+
+- [ ] Ensure the applicant has a building development project.
+- [ ] Verify the project can be marked as complete by the applicant.
+- [ ] Validate the project completion status.
+- [ ] Confirm the system releases any posted bond upon project completion.
+- [ ] Check that the system updates the occupancy status after project completion."
+US016,g21-badcamp.txt,Conference Management,Complex,"As a anonymoususer, I want to have the training options clearly marked for the following information: day and time of training, title, short summary, trainers, level, number of registrations, remaining registrations, location of training, link to full details of the training, register now link, so that I can shop for training all with one page AND find their class on on one page.","```gherkin
+Feature: Training Options Display
+
+  Scenario: Display training options with all required information
+    Given I am an anonymous user on the training page
+    When I view the training options
+    Then I should see the day and time of training
+    And I should see the title of the training
+    And I should see a short summary of the training
+    And I should see the trainers of the training
+    And I should see the level of the training
+    And I should see the number of registrations
+    And I should see the remaining registrations
+    And I should see the location of the training
+    And I should see a link to full details of the training
+    And I should see a ""register now"" link
+```
+
+```python
+from behave import given, when, then
+
+@given('I am an anonymous user on the training page')
+def step_impl(context):
+    context.browser.get('http://example.com/training')
+
+@when('I view the training options')
+def step_impl(context):
+    context.training_options = context.browser.find_elements_by_class_name('training-option')
+
+@then('I should see the day and time of training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-day-time').is_displayed()
+
+@then('I should see the title of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-title').is_displayed()
+
+@then('I should see a short summary of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-summary').is_displayed()
+
+@then('I should see the trainers of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-trainers').is_displayed()
+
+@then('I should see the level of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-level').is_displayed()
+
+@then('I should see the number of registrations')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-registrations').is_displayed()
+
+@then('I should see the remaining registrations')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-remaining-registrations').is_displayed()
+
+@then('I should see the location of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-location').is_displayed()
+
+@then('I should see a link to full details of the training')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-full-details-link').is_displayed()
+
+@then('I should see a ""register now"" link')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('training-register-now-link').is_displayed()
+```
+
+Validation Checklist:
+1. Verify the training page is accessible to anonymous users.
+2. Verify the training options are displayed on the page.
+3. Verify each training option displays the day and time of training.
+4. Verify each training option displays the title of the training.
+5. Verify each training option displays a short summary of the training.
+6. Verify each training option displays the trainers of the training.
+7. Verify each training option displays the level of the training.
+8. Verify each training option displays the number of registrations.
+9. Verify each training option displays the remaining registrations.
+10. Verify each training option displays the location of the training.
+11. Verify each training option includes a link to full details of the training.
+12. Verify each training option includes a ""register now"" link."
+US018,g02-federalspending.txt,Federal Spending,Simple,"As an Agency user, I want to accurately see who created a submission, so that I'm not confused about who last updated a submission.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: View submission creator
+  As an Agency user,
+  I want to accurately see who created a submission,
+  So that I'm not confused about who last updated a submission.
+
+  Scenario: View creator of a newly created submission
+    Given I am logged in as an Agency user
+    When I create a new submission
+    Then I should see my name as the creator of the submission
+
+  Scenario: View creator of an existing submission
+    Given I am logged in as an Agency user
+    And there is an existing submission created by another user
+    When I view the submission
+    Then I should see the name of the user who created the submission
+
+  Scenario: View creator after submission update
+    Given I am logged in as an Agency user
+    And there is an existing submission created by another user
+    When I update the submission
+    Then I should still see the name of the user who created the submission
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as an Agency user')
+def step_impl(context):
+    context.user = login_as_agency_user()
+
+@when('I create a new submission')
+def step_impl(context):
+    context.submission = create_new_submission(context.user)
+
+@then('I should see my name as the creator of the submission')
+def step_impl(context):
+    assert context.submission.creator == context.user.name
+
+@given('there is an existing submission created by another user')
+def step_impl(context):
+    context.other_user = create_user('other_user')
+    context.submission = create_new_submission(context.other_user)
+
+@when('I view the submission')
+def step_impl(context):
+    context.viewed_submission = view_submission(context.submission.id)
+
+@then('I should see the name of the user who created the submission')
+def step_impl(context):
+    assert context.viewed_submission.creator == context.other_user.name
+
+@when('I update the submission')
+def step_impl(context):
+    context.updated_submission = update_submission(context.submission.id, context.user)
+
+@then('I should still see the name of the user who created the submission')
+def step_impl(context):
+    assert context.updated_submission.creator == context.other_user.name
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is logged in as an Agency user.
+- [ ] Verify that a new submission shows the logged-in user as the creator.
+- [ ] Verify that an existing submission shows the correct creator's name.
+- [ ] Verify that updating a submission does not change the creator's name.
+- [ ] Verify that the creator's name is displayed correctly in the submission view.
+- [ ] Verify that the system handles multiple users creating and updating submissions without confusion.
+- [ ] Verify that the creator's name is stored and retrieved accurately from the database."
+US035,g10-scrumalliance.txt,Agile / Scrum,Complex,"As a trainer, I want to copy one of my courses or events, so that I can create a new one.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Copy Course or Event
+  As a trainer,
+  I want to copy one of my courses or events,
+  So that I can create a new one.
+
+  Scenario: Copy a course
+    Given I am logged in as a trainer
+    And I have a course named ""Course A""
+    When I choose to copy ""Course A""
+    Then a new course named ""Copy of Course A"" should be created
+    And the new course should have the same content as ""Course A""
+
+  Scenario: Copy an event
+    Given I am logged in as a trainer
+    And I have an event named ""Event A""
+    When I choose to copy ""Event A""
+    Then a new event named ""Copy of Event A"" should be created
+    And the new event should have the same content as ""Event A""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a trainer')
+def step_impl(context):
+    context.trainer = Trainer()
+    context.trainer.login()
+
+@given('I have a course named ""{course_name}""')
+def step_impl(context, course_name):
+    context.course = Course(name=course_name)
+    context.trainer.add_course(context.course)
+
+@given('I have an event named ""{event_name}""')
+def step_impl(context, event_name):
+    context.event = Event(name=event_name)
+    context.trainer.add_event(context.event)
+
+@when('I choose to copy ""{name}""')
+def step_impl(context, name):
+    if hasattr(context, 'course') and context.course.name == name:
+        context.new_course = context.trainer.copy_course(context.course)
+    elif hasattr(context, 'event') and context.event.name == name:
+        context.new_event = context.trainer.copy_event(context.event)
+
+@then('a new course named ""Copy of {course_name}"" should be created')
+def step_impl(context, course_name):
+    assert context.new_course.name == f""Copy of {course_name}""
+
+@then('a new event named ""Copy of {event_name}"" should be created')
+def step_impl(context, event_name):
+    assert context.new_event.name == f""Copy of {event_name}""
+
+@then('the new course should have the same content as ""{course_name}""')
+def step_impl(context, course_name):
+    assert context.new_course.content == context.course.content
+
+@then('the new event should have the same content as ""{event_name}""')
+def step_impl(context, event_name):
+    assert context.new_event.content == context.event.content
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the trainer can log in successfully.
+- [ ] Verify that the trainer has a course named ""Course A"".
+- [ ] Verify that the trainer has an event named ""Event A"".
+- [ ] Verify that the trainer can choose to copy a course.
+- [ ] Verify that the trainer can choose to copy an event.
+- [ ] Verify that a new course named ""Copy of Course A"" is created.
+- [ ] Verify that a new event named ""Copy of Event A"" is created.
+- [ ] Verify that the new course has the same content as the original course.
+- [ ] Verify that the new event has the same content as the original event."
+US041,g05-openspending.txt,Open Data Publishing,Complex,"As a Data Consuming User, I want to see textual descriptions that accompany embedded visualisations, So that I can more easily understand what I am viewing.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Display textual descriptions for embedded visualisations
+
+  Scenario: Display textual description for a single visualisation
+    Given a visualisation is embedded in the application
+    When I view the visualisation
+    Then I should see a textual description accompanying the visualisation
+
+  Scenario: Display textual descriptions for multiple visualisations
+    Given multiple visualisations are embedded in the application
+    When I view the visualisations
+    Then I should see a textual description accompanying each visualisation
+
+  Scenario: No visualisation present
+    Given no visualisation is embedded in the application
+    When I view the application
+    Then I should not see any textual descriptions
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('a visualisation is embedded in the application')
+def step_given_visualisation_embedded(context):
+    context.visualisation = True
+
+@given('multiple visualisations are embedded in the application')
+def step_given_multiple_visualisations_embedded(context):
+    context.visualisations = [True, True, True]  # Example list of visualisations
+
+@given('no visualisation is embedded in the application')
+def step_given_no_visualisation_embedded(context):
+    context.visualisation = False
+
+@when('I view the visualisation')
+def step_when_view_visualisation(context):
+    context.viewing_visualisation = context.visualisation
+
+@when('I view the visualisations')
+def step_when_view_visualisations(context):
+    context.viewing_visualisations = context.visualisations
+
+@when('I view the application')
+def step_when_view_application(context):
+    context.viewing_application = True
+
+@then('I should see a textual description accompanying the visualisation')
+def step_then_see_textual_description(context):
+    assert context.viewing_visualisation is True
+    # Add logic to check for textual description
+
+@then('I should see a textual description accompanying each visualisation')
+def step_then_see_textual_description_each(context):
+    assert all(context.viewing_visualisations)
+    # Add logic to check for textual descriptions
+
+@then('I should not see any textual descriptions')
+def step_then_no_textual_descriptions(context):
+    assert context.visualisation is False
+    # Add logic to check that no textual descriptions are present
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that a textual description is displayed for a single visualisation.
+- [ ] Verify that textual descriptions are displayed for multiple visualisations.
+- [ ] Verify that no textual descriptions are displayed when no visualisations are present.
+- [ ] Ensure that the textual descriptions are relevant and correctly associated with their respective visualisations.
+- [ ] Check the layout and formatting of the textual descriptions to ensure they are easily readable.
+- [ ] Validate that the application handles edge cases, such as partial loading of visualisations or descriptions.
+- [ ] Confirm that the textual descriptions update correctly if the visualisations are dynamically changed or updated."

@@ -1,0 +1,11 @@
+story_id,source_file,domain,complexity,user_story
+US002,g04-recycling.txt,Recycling & Facilities,Complex,"As a user, I want to be able to check transaction history and keep a record of it, so that I can go back when needed."
+US006,g08-frictionless.txt,Data Packaging,Medium,"As a Researcher, I want an app that generates an OpenRefine reconciliation API endpoint from a Tabular Data Package, so that I can use it to clean messy data."
+US007,g08-frictionless.txt,Data Packaging,Complex,"As a developer, I want an DSpace integration, so that I can integrate data-packaged data with pipelines that use Dspace."
+US008,g04-recycling.txt,Recycling & Facilities,Complex,"As a user, I want to be able to browse through the list of facolities and see which ones are environment-friendly, so that I can know for sure my waste is not going to leave a negative ecological footprint."
+US009,g24-unibath.txt,University Research Archive,Complex,"As a depositor, I want to link datasets with the project DMP, so that compliance with DMP can be demonstrated and whole project workflow is linked together."
+US015,g03-loudoun.txt,Government Services,Complex,"As an Applicant, I want to Complete Building Development Project, so that I can receive any posted bond and/or obtain occupancy."
+US016,g21-badcamp.txt,Conference Management,Complex,"As a anonymoususer, I want to have the training options clearly marked for the following information: day and time of training, title, short summary, trainers, level, number of registrations, remaining registrations, location of training, link to full details of the training, register now link, so that I can shop for training all with one page AND find their class on on one page."
+US018,g02-federalspending.txt,Federal Spending,Simple,"As an Agency user, I want to accurately see who created a submission, so that I'm not confused about who last updated a submission."
+US035,g10-scrumalliance.txt,Agile / Scrum,Complex,"As a trainer, I want to copy one of my courses or events, so that I can create a new one."
+US041,g05-openspending.txt,Open Data Publishing,Complex,"As a Data Consuming User, I want to see textual descriptions that accompany embedded visualisations, So that I can more easily understand what I am viewing."
