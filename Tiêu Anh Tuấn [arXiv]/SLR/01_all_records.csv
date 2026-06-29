@@ -1,0 +1,89 @@
+id,title,author,year,venue,search_strings
+1,MangaFlow: An End-to-End Agentic Framework for Controllable Story to Manga Generation,"Wang, Muyao; Xie, Zeke; Chen, Yanhao; Xiu, Lixin; Nakayama, Hideki",2024,arXiv.org,String A
+2,PromptEmbedder:: Efficient and Transferable Text Embedding via Dual-LLM Soft Prompting,"Tsai, Yu-Che; Chen, Kuan-Yu; Chen, Yuan-Hao; Chang, Yu-Han; Tsai, Ching-Yu; Chuang, Yu-Hsiang; Lin, Shou-De",2026,arXiv.org,String A
+3,Beyond One Path: Evaluating and Enhancing Divergent Thinking in Interactive LLM Agents,"Park, Jihyeong; Baek, Ingeol; Park, Jeonghyun; Lee, Hwanhee",2025,arXiv.org,String A
+4,Unified Synthesis of Compositional Speech and Sound from Free-Form Text Prompts,"Wang, Yuyue; Wang, Xihua; Cheng, Xin; Chen, Yijing; Song, Ruihua",2025,arXiv.org,String A
+5,Extracting Small Translation Specialists from LLMs by Aggressively Pruning Experts,"Martin, Liu O.; Bandarkar, Lucas; Peng, Nanyun",2025,arXiv.org,String A
+6,Skill-as-Pseudocode: Refactoring Skill Libraries to Pseudocode for LLM Agents,"Li, Xinze; Zang, Yuhang; Cao, Yixin; Sun, Aixin",2025,arXiv.org,String A
+7,Addressing Variable Heterogeneity in Distributed Multimodal Training with Entrain,"Jang, Insu; Chowdhury, Mosharaf",2025,arXiv.org,String A
+8,Let the Results Speak: A Replication-First Paradigm for LLM Behavioral Benchmarking,"Yuming; Huang; Liu, Yao; Wang, Lei; Wan, Junchen",2025,arXiv.org,String A
+9,Neuro-Symbolic Verification of LLM Outputs for Data-Sensitive Domains (extended preprint),"Sigloch, Paul; Benzmüller, Christoph",2026,arXiv.org,String A
+10,JuICE: A Benchmark for Evaluating LLM-Judge in Identifying Cultural Errors,"Jin, Jiho; Myung, Junho; Oh, Juhyun; Park, Junyeong; Putri, Rifki Afina; Dev, Sunipa; Prabhakaran, Vinodkumar; Oh, Alice",2025,arXiv.org,String A
+11,DEI: Diversity in Evolutionary Inference for Quality-Diversity Search,"Donaghy, John; Rastogi, Shikhar",2025,arXiv.org,String A
+12,ConVer: Using Contracts and Loop Invariant Synthesis for Scalable Formal Software Verification,"Pirzada, Muhammad A. A.; Wang, Weiqi; Charalambous, Yiannis; Korovin, Konstantin; Cordeiro, Lucas C.",2025,arXiv.org,String A
+13,Voluntary Collusion with Secret Tools in Competing LLM Agents,"Zeng, Xijie; Rudzicz, Frank",2025,arXiv.org,String A
+14,LaneRoPE: Positional Encoding for Collaborative Parallel Reasoning and Generation,"Cesa, Gabriele; Hehn, Thomas; Torres-Camps, Aleix; Casellas, Àlex Batlle; Ros-Giralt, Jordi; Behboodi, Arash; Orekondy, Tribhuvanesh",2025,arXiv.org,String A
+15,AgensFlow: A Coordination-Policy Substrate for Multi-Agent Systems,"Koenigstein, Nicole",2025,arXiv.org,String A
+16,When prompt perturbations break your A/B test: A valid statistical test for generative surveying,"Helm, Hayden; Priebe, Carey",2024,arXiv.org,String A
+17,A Systematic Evaluation of Retrieval-Augmented Generation and Language Models for Space Operations,"Belo, Ruben; Guimarães, Marta; Soares, Cláudia",2025,arXiv.org,String A
+18,Using Zero-Shot LLM-Generated Survey Data for Geographically Explicit Population Synthesis,"Anderson, Taylor; Hoene, Sara Von; Cinar, Orhan Yagizer; Hoene, Emma Von; Roess, Amira; Crooks, Andrew; Kavak, Hamdi",2024,arXiv.org,String A
+19,PathWISE: Multi-Agent Cancer Pathway Triaging Ontology Learning from Clinical Flowcharts,"Abioye, Sofiat; Khan, Ufaq; Ashraf, Shazad; Butt, Mohammed Adil; Beggs, Andrew D.; Byfield, Adam; Jose, Anusha; Poulett, William; Wallace, Ben; Qadir, Junaid; Bilal, Muhammad",2025,arXiv.org,String A
+20,RePlan-Bot: Multi-Level Replanning for Embodied Instruction Following,"Gong, Xicheng; Sun, Guozheng; Xu, Peiran; Mu, Yadong",2026,arXiv.org,String A
+21,An Efficient and Privacy-Preserving Architecture for Cross-Institutional Collaborative RAG,"Mao, Chenxin; Liu, Shangyu; Zheng, Zhenzhe; Wu, Fan; Wu, Jie; Chen, Guihai",2025,arXiv.org,String A
+22,DiscoverPhysics: Benchmarking LLMs for Out-of-the-Box Scientific Thinking,"Wiemann, Matt L.; Smith, Lindsay M.; Melchior, Peter; Mishra-Sharma, Siddharth; Wilson, Andrew Gordon; Izmailov, Pavel; Cuesta-Lázaro, Carolina",2025,arXiv.org,String A
+23,A Two-Phase Stability Study of LLM Judges and Bar Council Examiners on Thai Bar-Exam Free-Form Essays,"Akarajaradwong, Pawitsapak; Lertprasertphakorn, Wuttikrai; Chaksangchaichot, Chompakorn; Nutanong, Sarana",2026,arXiv.org,String A
+24,GeoFaith: A Spatio-Temporal Dual View of Faithful Chain-of-Thought,"Lv, Weijiang; Zhao, Wentong; Wang, Jiayu; Wu, Yuhao; Wei, Jiaheng; Xia, Xiaobo",2026,arXiv.org,String A
+25,Multi-Stakeholder LLM Alignment: Decomposing Estimation from Aggregation,"Zheng, Lulu; Yang, Wenjin; Zhang, Xiangwen; Yin, Rong; Hu, Yulan; Pan, Zheng; Li, Xin",2024,arXiv.org,String A
+26,LATTE: Forecasting Peer Anchored Preference Trajectories for Personalized LLM Generation,"Li, Jinze; Yang, Xiaoyan; Yang, Shuo; Xu, Jinfeng; Shen, Yue; Wang, Jian; Gu, Jinjie; Ngai, Edith Cheuk-Han",2024,arXiv.org,String A
+27,Focal Reward: Balanced Reinforcement Learning under Rubric-Based Rewards,"Huang, Yu; Zhao, Zihua; Huan, Zhaoxin; Gu, Wanli; Hong, Feng; Ge, Xinmu; Yuan, Lin; Wu, Weichang; Hu, Qiang; Zhang, Xiaolu; Zhou, Jun; Yao, Jiangchao",2024,arXiv.org,String A
+28,A Hybrid Vision-Language Architecture for Automated Defect Reasoning and Report Generation in Industrial Inspection,"Malikussaid; Gohar, Imad",2024,arXiv.org,String A
+29,PEFT-Arena: Understanding Parameter-Efficient Finetuning from a Stability-Plasticity Perspective,"Huang, Yangyi; Peng, Ruotian; Qiu, Zeju; Kang, Jiale; Wen, Yandong; Schölkopf, Bernhard; Liu, Weiyang",2024,arXiv.org,String B
+30,?-QVLA: Robust Quantization for Vision-Language-Action Models via Composite Rotation and Per-step Scaling,"Wang, Xinyu; Li, Mingze; Lyu, Sicheng; Liu, Dongxiu; Yang, Kaicheng; Zhao, Ziyu; Cui, Yufei; Chang, Xiao-Wen; Lu, Peng",2024,arXiv.org,String B
+31,Can LLMs Use Linguistic Uncertainty Markers to Reliably Reflect Intrinsic Confidence?,"Liu, Gabrielle Kaili-May; Cohan, Arman",2025,arXiv.org,String B
+32,Principled Algorithms for Optimizing Generalized Metrics in Multi-Label Learning,"Mohri, Mehryar; Zhong, Yutao",2024,arXiv.org,String B
+33,Code as a Weapon: A Consensus-Labeled Prompt Bank for Measuring Coding-Model Compliance with Malicious-Code Requests,"Young, Richard J.; Moody, Gregory D.",2025,arXiv.org,String B
+34,A Fresh Look at Lamarckian Evolution and the Baldwin Effect,"Benito, Inès; Lutzeyer, Johannes F.; Doerr, Benjamin",2024,arXiv.org,String B
+35,Adaptive Partitioning in Column Generation for Nested Paths,"Rossum, Bart van; Lieshout, Rolf van; Jacquillat, Alexandre",2022,arXiv.org,String B
+36,Latent-Conditioned Parameterized Quantum Circuits as Universal Approximators for Distributions over Quantum States,"Tran, Quoc Hoan; Chinzei, Koki; Endo, Yasuhiro; Oshima, Hirotaka",2024,arXiv.org,String B
+37,Beyond Binary: Sim-to-Real Dexterous Manipulation with Physics-Grounded Contact Representation,"Pan, Jiahe; Coros, Stelian; Malik, Jitendra; Lin, Toru",2024,arXiv.org,String B
+38,OmniVerifier-M1: Multimodal Meta-Verifier with Explicit Structured Recalibration,"Zhang, Xinchen; Liu, Bowei; Liu, Jiale; Shi, Chufan; Zhang, Yizhen; Liu, Junhong; Zhang, Youliang; Li, Zhiheng; Yang, Yujiu; Yang, Ling",2025,arXiv.org,String B
+39,Single-Rollout Hidden-State Dynamics for Training-Free RLVR Data Selection,"Wu, Jianghao; Cai, Jianfei; Wang, Weiqiang; Ye, Jin; Schmidt, Daniel F.; George, Yasmeen",2025,arXiv.org,String B
+40,Measuring Form and Function in Language Models,"Martínez, Héctor Javier Vázquez; Yang, Charles",2025,arXiv.org,String B
+41,JECA^2: Judgment-Explanation Consistent Adversarial Attack against Forensic Vision-Language Models,"Qian, Jiachen",2026,arXiv.org,String B
+42,Deformable Gaussian Occupancy: Decoupling Rigid and Nonrigid Motion with Factorized Distillation,"Gao, Yang; Li, Wuyang; Luan, Po-Chien; Alahi, Alexandre",2026,arXiv.org,String B
+43,SARAD: LLM-Based Safety-Aware Hybrid Reinforcement Learning with Collision Prediction for Autonomous Driving,"Wu, Kangyu; Cui, Peng; Chen, Guoxi; Zhang, Ya",2025,arXiv.org,String B
+44,"MUSE: Benchmarking Manufacturable, Functional, and Assemblable Text-to-CAD Generation","Dong, Xiaoyu; Li, Zhi; Wu, Xiao-Ming",2025,arXiv.org,String B
+45,DriveWAM: Video Generative Priors Enable Scalable World-Action Modeling for Autonomous Driving,"Shi, Chen; Xu, Jinrui; Shi, Shaoshuai; Sheng, Kehua; Zhang, Bo; Jiang, Li",2025,arXiv.org,String B
+46,Cultural Binding Heads in Language Models,"Floro, Avrile; Benedetto, Luca",2024,arXiv.org,String B
+47,Let Relations Speak: An End-to-End LLM-GNN Soft Prompt Framework for Fraud Detection,"Zuo, Zhixing; He, Huilin; Wu, Jiasheng; Cheng, Dawei",2026,arXiv.org,String B
+48,An LLM-Based Assistance System for Intuitive and Flexible Capability-Based Planning,"Silva, Luis Miguel Vieira da; König, Nicolas; Gehlhoff, Felix",2026,arXiv.org,String B
+49,Towards Autonomous Commissioning of Industrial Drives via Multi-Objective Bayesian Optimization,"Petrovic, David; Susto, Gian Antonio; Cenedese, Angelo",2026,arXiv.org,String B
+50,EIT-Pneumatic Hybrid Robotic Skin for Practical and Accurate Force Map Reconstruction,"Cho, Junhwi; Bae, Sunggyu; Ma, Junghyeon; Lee, Hyosang; Kim, Jung; Park, Kyungseo",2026,arXiv.org,String B
+51,Beyond One Path: Evaluating and Enhancing Divergent Thinking in Interactive LLM Agents,"Park, Jihyeong; Baek, Ingeol; Park, Jeonghyun; Lee, Hwanhee",2025,arXiv.org,String B
+52,Skill0.5: Joint Skill Internalization and Utilization for Out-of-Distribution Generalization in Agentic Reinforcement Learning,"Zhu, Jiapeng; Yu, Jianxiang; Zhao, Yibo; Han, Chengcheng; Gu, Qi; Cai, Xunliang; Li, Xiang; Qian, Weining",2026,arXiv.org,String B
+53,VITAL: Visual-Semantic Dual Supervision for Enhanced and Interpretable Latent Reasoning in Medical MLLMs,"Li, Qiaoru; Liang, Shaotian; Chen, Jintao; Sun, Haoran; Cai, Yuxiang; Yin, Jianwei; Jiang, Yankai",2024,arXiv.org,String B
+54,Tactile-Proprioceptive Sensor Fusion for Contact Wrench Estimation in Whole-Body Physical Human-Robot Interaction,"Min, Junha; Ma, Junghyeon; Kwon, Jiwung; Bae, Sunggyu; Kim, Joohyung; Park, Kyungseo",2026,arXiv.org,String B
+55,Measuring Progress Toward AGI: A Cognitive Framework,"Burnell, Ryan; Yamamori, Yumeya; Firat, Orhan; Olszewska, Kate; Hughes-Fitt, Steph; Kelly, Oran; Galatzer-Levy, Isaac R.; Morris, Meredith Ringel; Dafoe, Allan; Snyder, Alison M.; Goodman, Noah D.; Botvinick, Matthew; Legg, Shane",2025,arXiv.org,String B
+56,HRBench: Benchmarking and Understanding Thinking-Mode Switch Strategies in Hybrid-Reasoning LLMs,"Ning, Yansong; Liu, Mianpeng; Ye, Jingwen; Zhang, Weidong; Liu, Hao",2025,arXiv.org,String B
+57,CLANE: Continual Learning of Actions on Neuromorphic Hardware from Event Cameras,"Hajizada, Elvin; Neumeier, Michael; Frady, Edward Paxon; Sandamirskaya, Yulia; Arnim, Axel von; Li, Bing; Hüllermeier, Eyke",2025,arXiv.org,String B
+58,Meta-Attention: Bayesian Per-Token Routing for Efficient Transformer Inference,"Ferrari, Alan",2025,arXiv.org,String B
+59,Hybrid neural denoising for resource-efficient near- and sub-threshold radio triggering of extensive air showers,"Aksoy, Alperen; Bekman, Ilja; Cristinziani, Markus; Boone, Eric-Teunis de; Dimitrov, Vesselin; Dorosti, Qader; Eguzo, Chimezie; Heidbrink, Stefan; Waasen, Stefan van; Zambanini, Andre",2023,arXiv.org,String C
+60,Learning the Error Patterns of Language Models,"Kim, Jinwoo; Berg-KirkPatrick, Taylor; D'Antoni, Loris",2025,arXiv.org,String C
+61,EventShiftFlow: Towards Hardware-efficient FPGA-based Flow Estimation,"Bizzi, Arianna Alonso; Cladera, Fernando; Taylor, C. J.",2025,arXiv.org,String C
+62,HELEA: Hard-Negative Benchmark and LLM-based Reranking for Robust Entity Alignment,"Jang, Yoonjin; Kim, Junwoo; Ko, Youngjoong",2025,arXiv.org,String C
+63,Compositional Generalization in Autoregressive Models via Logit Composition,"Kumar, Aakash; Bucarelli, Maria Sofia; Natale, Emanuele",2025,arXiv.org,String C
+64,"Better Accuracies, Worse Reasoning: A Step-Level Audit of Medical Chain-of-Thought Distillation","Jiang, Zhaoyang; Peng, Xuanqi; Teng, Fei; Fu, Zhizhong; Kim, Yunsoo; Mi, Jiacong; Li, Zicheng; Wu, Honghan",2025,arXiv.org,String C
+65,ProRL: Effective Reinforcement Learning for Proactive Recommendation via Rectified Policy Gradient Estimation,"Hou, Hongru; Mei, Tiehua; Geng, Denghui; Huang, Jinhui; Xu, Ao; Chen, Hengrui; Liang, Jiaqing; Yang, Deqing",2025,arXiv.org,String C
+66,PrunePath: Towards Highly Structured Sparse Language Models,"Gu, Zhexuan; Fu, Zixun; Yuan, Yancheng",2025,arXiv.org,String C
+67,$L_p$ Minkowski problem and Brunn-Minkowski inequality for dual quermassintegrals,"Chen, Xiaojuan; Tang, Shengyu; Wang, Sinan",2024,arXiv.org,String C
+68,Polarimetric Backscattering Setup for Quantitative Scattering Parameters Retrieval,"Singh, Bhanu P.; Stefanov, Vladislav; Coorens, Nadine A.; Stefanov, Andre",2024,arXiv.org,String C
+69,"Out of Sight, Not Out of Mind: Unveiling Latent Attack in Latent-based Multi-Agent Systems","Wang, Chenxi; Huang, Ruiyang; Sun, Jiayan; Wei, Lei; Wu, Yifan",2025,arXiv.org,String C
+70,How to measure intra-physician variability in clinical decision-making?,"Benani, Alaedine; Meneton, Pierre; Messas, Emmanuel; Hettal, Liza; Sagireddy, Sai; Grosgeorge, Damien; Salomon, Jérôme; Bodard, Sylvain; Tannier, Xavier",2026,arXiv.org,String C
+71,Nonvolatile Charge-Domain Attention with HZO Ferroelectric Capacitors: A Simulation-Based Device-to-System Evaluation,"Abouagour, Faris",2025,arXiv.org,String C
+72,"Plant, Persist, Trigger: Sleeper Attack on Large Language Model Agents","Li, Yongxiang; Li, Moxin; Ma, Zhixin; Zhu, Fengbin; Liu, Dongrui; Wang, Wenjie; Feng, Fuli",2024,arXiv.org,String C
+73,MangaFlow: An End-to-End Agentic Framework for Controllable Story to Manga Generation,"Wang, Muyao; Xie, Zeke; Chen, Yanhao; Xiu, Lixin; Nakayama, Hideki",2024,arXiv.org,String C
+74,FT-Pilot: Automated Fault-Tolerant RTL Rewriting via Vulnerability-Guided LLMs,"Liu, Weixing; Liu, Zizhen; Ye, Jing; Wang, Naixing; Liu, Cheng; Li, Huawei; Li, Xiaowei",2026,arXiv.org,String C
+75,DebFilter: Eradicating Biases Stashed in Value,"Lee, Seung Hyuk; Kim, Songkuk",2024,arXiv.org,String C
+76,Learning Logical Operations for Arbitrary Quantum Error Correction Codes,"Meyer, Nico; Mutschler, Christopher; Seuß, Dominik; Maier, Andreas; Scherer, Daniel D.",2025,arXiv.org,String C
+77,Sign-Aware Gated Sparse Autoencoders: Modeling Anticorrelated Features with Bi-Jump-ReLU Activations,"Wieciech, Bartosz; Awrahman, Zmnako; Czelej, Marcin; Velasquez, Victor Hugo Jaramillo; Stobieniecka, Wioletta",2026,arXiv.org,String C
+78,Deconstructing Spatial Complexity: Hierarchical Decomposition for LLM Spatial Reasoning,"Wang, Yi; Lu, Haojie; Zhang, Zhaofan; Chen, Li; Xie, Sihong",2024,arXiv.org,String C
+79,Examining Agents' Bias Amplification versus Suppression in Multi-Agent Systems,"Wu, Zejian Eric; Jiang, Zhongyi; Zhuang, Yuan; Hu, Paul Jen-Hwa",2025,arXiv.org,String C
+80,ICAN-Deploy: Identity-Stable Canary Deployment for Safety-Critical Embodied Agents,"Qin, Xue; Luan, Simin; See, John; Boukhers, Zeyd; Yang, Cong; Li, Zhijun",2026,arXiv.org,String C
+81,ATLAS: All-round Testing of Long-context Abilities across Scales,"Huang, Deli; Wang, Cunguang; Tang, Hongyin; Tang, Zhe; Guo, Linsen; Ru, Dongyu; Yuan, Ruoshi; Zhu, Ziyue; Li, Xiaoyu; Wang, Ziwen; Zhang, Chen; Gui, Anchun; Zan, Wen; Zhang, Jiaqi; Cao, Xuezhi; Wang, Jingang; Cai, Xunliang; Cao, Yixin",2025,arXiv.org,String C
+82,AgentGuard: An Attribute-Based Access Control Framework for Tool-Use LLM-Based Agent,"Luo, Jiaqi; Peng, Songyang; Dai, Jiarun; Chen, Zhile; Shen, Zhuoxiang; Hong, Geng; Pan, Xudong; Zhang, Yuan; Yang, Min",2025,arXiv.org,String C
+83,PromptEmbedder:: Efficient and Transferable Text Embedding via Dual-LLM Soft Prompting,"Tsai, Yu-Che; Chen, Kuan-Yu; Chen, Yuan-Hao; Chang, Yu-Han; Tsai, Ching-Yu; Chuang, Yu-Hsiang; Lin, Shou-De",2025,arXiv.org,String C
+84,"I Hear, Therefore I Trust: A Socio-Technical Investigation of Humans as Synthetic Speech Detectors","Erscoi, Lelia; Kinnunen, Tomi",2024,arXiv.org,String C
+85,SAFEVPR: Patch-Based Conformal Verification for Safe Cross-Condition Sequence Visual Place Recognition,"Sier, Ha; Zhang, Jiaqiang; Zou, Zhuo; Yu, Xianjia; Westerlund, Tomi",2025,arXiv.org,String C
+86,VCap: Hypergeometric Rewards for Weak-to-Strong Visual Captioning,"Lu, Xingyu; Wang, Jinpeng; Zhang, Yi-Fan; Yang, Yankai; Long, Yancheng; Fan, Yiyang; Zheng, Xuanyu; Fan, Haonan; Jiang, Kaiyu; Zhang, Tianke; Liu, Changyi; Wen, Bin; Yang, Fan; Gao, Tingting; Li, Han; Yuan, Chun",2025,arXiv.org,String C
+87,"Automated Estimation of Impact Time, Impact Location, and Shuttlecock Speed in Badminton Smashes Using Event Cameras","Washida, Yudai; Kase, Yuto; Ishibe, Kai; Yasuda, Ryoma; Hashimoto, Sakiko",2024,arXiv.org,String C
+88,SilentRetrieval: Hijacking Retrieval-Augmented Generation via Semantically-Preserving Adversarial Data Poisoning,"Qian, Jiachen",2026,arXiv.org,String C

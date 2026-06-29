@@ -1,0 +1,14 @@
+# Evidence Table Synthesis - LLM-Based Software Testing and Test Automation
+
+**All 11 papers reviewed** utilize Large Language Models (such as GPT-4, GPT-4o, Claude, Gemini, Llama, DeepSeek-Coder, and CodeLlama) to automate software testing activities, including requirement-to-test transformation, Gherkin generation, API validation, UI testing, regression testing, compliance verification, legacy system migration, and enterprise workflow automation. The studies primarily focus on improving development productivity, increasing test coverage, reducing manual effort, enhancing assertion quality, and minimizing hallucinations through techniques such as retrieval-augmented generation (RAG), fine-tuning, and automated validation pipelines.
+
+## But, NO papers:
+* **(1) [I - Intervention/Approach]:** Evaluate the zero-shot capability of frontier LLMs to automatically generate complete end-to-end behavioral test assets from standardized business requirements, including requirements interpretation, scenario generation, executable test logic, and validation artifacts within a single unified workflow.
+* **(2) [O - Outcome Metric 1]:** Quantitatively compare generated testing artifacts against expert-created ground-truth outputs using embedding-based semantic similarity metrics to measure behavioral correctness and requirement alignment at a predefined reliability threshold.
+* **(3) [O - Outcome Metric 2]:** Simultaneously assess both semantic correctness and execution correctness through a dual-evaluation framework that combines semantic similarity scoring with automated executability validation (e.g., parser validation, compilation success, or runtime execution success) across the complete generated testing pipeline.
+
+## GAP
+Current research demonstrates that LLMs can improve software testing productivity, generate test artifacts, increase coverage, and support various testing activities. However, there is a lack of rigorous quantitative evaluation of end-to-end LLM-generated testing workflows that jointly measure semantic alignment with expert-authored test assets and executable correctness using automated validation mechanisms. Existing studies typically evaluate either task utility, coverage, syntax validity, or human judgment independently, rather than combining semantic and execution-based measures within a unified assessment framework.
+
+## Contribution
+This research evaluates the zero-shot performance of frontier LLMs in generating complete software testing artifacts from structured requirements, using a dual-metric evaluation framework consisting of (1) embedding-based semantic similarity against expert-authored reference outputs and (2) automated executable validation through syntax parsing and execution checks. This provides a more comprehensive assessment of both behavioral correctness and practical usability than existing approaches.
