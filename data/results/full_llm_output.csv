@@ -1,0 +1,4080 @@
+story_id,source_file,domain,complexity,role,goal,benefit,connextra_valid,expected_test_scenarios,annotator_1_score,annotator_2_score,agreed_score,notes,llm_output,model_name,estimated_cost,error_log,run_timestamp
+US001,parabol_blog,Parabol: Mobile Apps,Complex,user,to be able to easily sync my app data across multiple devices,I can access my information from anywhere,Yes,"1. Sync 5 text notes across iOS and Web within 5 seconds. 2. Edit offline on Device A, reconnect, verify cloud update. 3. Cause simultaneous edit conflict and check resolution prompt.",3,3,3.0,"Annotators agreed it's a solid story (score 5). Multi-device sync is a clear, valuable user goal. Could use a bit more detail on what data specifically is synced.","**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Sync app data across multiple devices
+
+  Scenario: Sync data from one device to another
+    Given I am logged into the app on Device A
+    And I have some data saved on Device A
+    When I sync the data on Device A
+    And I log into the app on Device B
+    Then I should see the same data on Device B
+
+  Scenario: Sync data when offline
+    Given I am logged into the app on Device A
+    And I have some data saved on Device A
+    And I am offline on Device A
+    When I try to sync the data on Device A
+    Then I should see an error message indicating that sync is not possible
+
+  Scenario: Sync data with conflicting changes
+    Given I am logged into the app on Device A
+    And I have some data saved on Device A
+    And I am logged into the app on Device B
+    And I have made changes to the data on Device B
+    When I sync the data on Device A
+    Then I should see a conflict resolution prompt
+
+  Scenario: Sync data automatically
+    Given I am logged into the app on Device A
+    And I have some data saved on Device A
+    When I log into the app on Device B
+    Then the data should be automatically synced to Device B
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am logged into the app on Device A')
+def step_impl(context):
+    context.device_a.login()
+
+@given('I have some data saved on Device A')
+def step_impl(context):
+    context.device_a.save_data()
+
+@when('I sync the data on Device A')
+def step_impl(context):
+    context.device_a.sync_data()
+
+@given('I log into the app on Device B')
+def step_impl(context):
+    context.device_b.login()
+
+@then('I should see the same data on Device B')
+def step_impl(context):
+    assert context.device_b.get_data() == context.device_a.get_data()
+
+@given('I am offline on Device A')
+def step_impl(context):
+    context.device_a.go_offline()
+
+@when('I try to sync the data on Device A')
+def step_impl(context):
+    context.sync_result = context.device_a.sync_data()
+
+@then('I should see an error message indicating that sync is not possible')
+def step_impl(context):
+    assert context.sync_result == 'Error: Cannot sync while offline'
+
+@given('I am logged into the app on Device B')
+def step_impl(context):
+    context.device_b.login()
+
+@given('I have made changes to the data on Device B')
+def step_impl(context):
+    context.device_b.modify_data()
+
+@then('I should see a conflict resolution prompt')
+def step_impl(context):
+    assert context.device_a.get_conflict_prompt() is not None
+
+@then('the data should be automatically synced to Device B')
+def step_impl(context):
+    assert context.device_b.get_data() == context.device_a.get_data()
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify user can log into the app on Device A
+- [ ] Verify user can save data on Device A
+- [ ] Verify data can be synced from Device A
+- [ ] Verify user can log into the app on Device B
+- [ ] Verify data on Device B matches data on Device A after sync
+- [ ] Verify app behavior when Device A is offline
+- [ ] Verify error message is shown when trying to sync offline
+- [ ] Verify user can log into the app on Device B
+- [ ] Verify data can be modified on Device B
+- [ ] Verify conflict resolution prompt appears when there are conflicting changes
+- [ ] Verify data is automatically synced to Device B when logging in
+- [ ] Verify data consistency across multiple devices after automatic sync",gpt-4o-2024-05-13,0.012694999999999998,None,2026-07-16 00:57:12
+US002,g04-recycling.txt,Recycling & Facilities,Complex,user,to be able to check transaction history and keep a record of it,I can go back when needed,Yes,View transaction history with list of past transactions; Filter by date or type; Export or download record; Empty state when no transactions exist,3,3,3.0,"Goal 'check transaction history and keep a record' is vague — no format, filter, or time range specified. Benefit is weak ('when needed'). Testable in basic form but edge cases unclear.","**1. Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Transaction History
+
+  Scenario: User views transaction history
+    Given the user is logged into their account
+    When the user navigates to the transaction history page
+    Then the user should see a list of past transactions
+
+  Scenario: User filters transaction history by date
+    Given the user is on the transaction history page
+    When the user selects a date range filter
+    And the user applies the date range filter
+    Then the user should see transactions within the selected date range
+
+  Scenario: User downloads transaction history
+    Given the user is on the transaction history page
+    When the user clicks the download button
+    Then the user should receive a file containing the transaction history
+```
+
+**2. Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('the user is logged into their account')
+def step_impl(context):
+    context.browser.get('https://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('user')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login-button').click()
+
+@when('the user navigates to the transaction history page')
+def step_impl(context):
+    context.browser.get('https://example.com/transaction-history')
+
+@then('the user should see a list of past transactions')
+def step_impl(context):
+    transactions = context.browser.find_elements_by_class_name('transaction')
+    assert len(transactions) > 0
+
+@given('the user is on the transaction history page')
+def step_impl(context):
+    context.browser.get('https://example.com/transaction-history')
+
+@when('the user selects a date range filter')
+def step_impl(context):
+    context.browser.find_element_by_id('date-range').click()
+    context.browser.find_element_by_id('start-date').send_keys('2023-01-01')
+    context.browser.find_element_by_id('end-date').send_keys('2023-12-31')
+
+@when('the user applies the date range filter')
+def step_impl(context):
+    context.browser.find_element_by_id('apply-filter').click()
+
+@then('the user should see transactions within the selected date range')
+def step_impl(context):
+    transactions = context.browser.find_elements_by_class_name('transaction')
+    for transaction in transactions:
+        date = transaction.find_element_by_class_name('date').text
+        assert '2023-01-01' <= date <= '2023-12-31'
+
+@when('the user clicks the download button')
+def step_impl(context):
+    context.browser.find_element_by_id('download-button').click()
+
+@then('the user should receive a file containing the transaction history')
+def step_impl(context):
+    # Assuming the file is downloaded to a predefined directory
+    import os
+    assert os.path.exists('/path/to/download/directory/transaction_history.csv')
+```
+
+**3. Validation Checklist:**
+
+- [ ] Verify the user can log into their account.
+- [ ] Verify the user can navigate to the transaction history page.
+- [ ] Verify the transaction history page displays a list of past transactions.
+- [ ] Verify the user can select a date range filter.
+- [ ] Verify the user can apply the date range filter.
+- [ ] Verify the transaction history is filtered correctly by the selected date range.
+- [ ] Verify the user can click the download button.
+- [ ] Verify a file containing the transaction history is downloaded.
+- [ ] Verify the downloaded file contains the correct transaction history data.",gpt-4o-2024-05-13,0.011555,None,2026-07-16 00:57:16
+US003,parabol_blog,Parabol: General,Medium,smart home owner,"to control all of my smart devices from a single app, so I can easily manage my home's technology",I can easily manage my home's technology,Yes,1. Pair a new smart bulb via app. 2. Group 3 devices and turn all off with one tap. 3. Display 'Device Offline' icon when router is disconnected.,3,2,2.0,Good clarity on the smart home domain. A2 flagged that 'all of my smart devices' might be too broad (scope creep risk). Resolved to 4.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Control all smart devices from a single app
+
+  Scenario: Add a new smart device to the app
+    Given I have opened the smart home app
+    When I navigate to the ""Add Device"" section
+    And I select the type of device I want to add
+    And I follow the on-screen instructions to add the device
+    Then the new device should appear in my list of devices
+
+  Scenario: Remove a smart device from the app
+    Given I have opened the smart home app
+    And I have a device already added
+    When I navigate to the device settings
+    And I select the ""Remove Device"" option
+    Then the device should no longer appear in my list of devices
+
+  Scenario: Control a smart device from the app
+    Given I have opened the smart home app
+    And I have a device already added
+    When I select the device from my list of devices
+    And I choose a control option (e.g., turn on/off, adjust settings)
+    Then the device should respond to the control command
+
+  Scenario: View the status of a smart device
+    Given I have opened the smart home app
+    And I have a device already added
+    When I select the device from my list of devices
+    Then I should see the current status of the device (e.g., on/off, current settings)
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I have opened the smart home app')
+def step_impl(context):
+    context.app.open()
+
+@when('I navigate to the ""Add Device"" section')
+def step_impl(context):
+    context.app.go_to_add_device_section()
+
+@when('I select the type of device I want to add')
+def step_impl(context):
+    context.app.select_device_type()
+
+@when('I follow the on-screen instructions to add the device')
+def step_impl(context):
+    context.app.follow_add_device_instructions()
+
+@then('the new device should appear in my list of devices')
+def step_impl(context):
+    assert context.app.is_device_in_list()
+
+@given('I have a device already added')
+def step_impl(context):
+    context.app.add_device_if_not_exists()
+
+@when('I navigate to the device settings')
+def step_impl(context):
+    context.app.go_to_device_settings()
+
+@when('I select the ""Remove Device"" option')
+def step_impl(context):
+    context.app.remove_device()
+
+@then('the device should no longer appear in my list of devices')
+def step_impl(context):
+    assert not context.app.is_device_in_list()
+
+@when('I select the device from my list of devices')
+def step_impl(context):
+    context.app.select_device()
+
+@when('I choose a control option (e.g., turn on/off, adjust settings)')
+def step_impl(context):
+    context.app.control_device()
+
+@then('the device should respond to the control command')
+def step_impl(context):
+    assert context.app.is_device_responding()
+
+@then('I should see the current status of the device (e.g., on/off, current settings)')
+def step_impl(context):
+    assert context.app.get_device_status() is not None
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the app opens successfully.
+- [ ] Verify navigation to the ""Add Device"" section works.
+- [ ] Verify the selection of device type is functional.
+- [ ] Verify following on-screen instructions adds the device.
+- [ ] Verify the new device appears in the list of devices.
+- [ ] Verify the app can detect if a device is already added.
+- [ ] Verify navigation to device settings works.
+- [ ] Verify the ""Remove Device"" option removes the device.
+- [ ] Verify the removed device no longer appears in the list.
+- [ ] Verify selecting a device from the list works.
+- [ ] Verify control options (e.g., turn on/off, adjust settings) are functional.
+- [ ] Verify the device responds to control commands.
+- [ ] Verify the current status of the device is displayed correctly.",gpt-4o-2024-05-13,0.01333,None,2026-07-16 00:57:20
+US004,g25-duraspace.txt,Digital Repository (DuraSpace),Medium,repository manager,to know all the collections and objects in the DAMS for which I have custodial responsibility,Benefit not explicitly stated.,Yes,1. Login as repo manager and view dashboard of assigned collections. 2. Attempt to access unassigned collection via direct URL (expect 403). 3. Filter objects by active status.,2,3,2.0,Role 'repository manager' is well-defined. Goal is slightly passive ('to know'). A1 suggested refactoring to 'view a list of...'.,"(1) Gherkin scenarios in .feature format:
+
+```gherkin
+Feature: View custodial collections and objects in DAMS
+
+  Scenario: Repository manager views all collections and objects
+    Given I am logged in as a repository manager
+    When I navigate to the DAMS dashboard
+    Then I should see a list of all collections and objects for which I have custodial responsibility
+```
+
+(2) Step definitions in Python:
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a repository manager')
+def step_impl(context):
+    context.browser.get('http://dams.example.com/login')
+    context.browser.find_element_by_id('username').send_keys('repository_manager')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('I navigate to the DAMS dashboard')
+def step_impl(context):
+    context.browser.get('http://dams.example.com/dashboard')
+
+@then('I should see a list of all collections and objects for which I have custodial responsibility')
+def step_impl(context):
+    collections = context.browser.find_elements_by_class_name('collection')
+    objects = context.browser.find_elements_by_class_name('object')
+    assert len(collections) > 0, ""No collections found""
+    assert len(objects) > 0, ""No objects found""
+```
+
+(3) Validation checklist:
+
+- [ ] Verify that the repository manager can log in successfully.
+- [ ] Verify that the repository manager can navigate to the DAMS dashboard.
+- [ ] Verify that the DAMS dashboard displays a list of collections for which the repository manager has custodial responsibility.
+- [ ] Verify that the DAMS dashboard displays a list of objects for which the repository manager has custodial responsibility.
+- [ ] Verify that the list of collections is not empty.
+- [ ] Verify that the list of objects is not empty.",gpt-4o-2024-05-13,0.006449999999999999,None,2026-07-16 00:57:21
+US005,parabol_blog,Parabol: UX Design,Medium,user,to be able to customize the layout of my dashboard so that I can arrange the information in a way that suits me,I can arrange the information in a way that suits me,Yes,1. Drag 'Activity' widget to top left. 2. Resize 'Charts' widget to 2x2. 3. Logout/login and verify layout persists.,2,2,2.0,"Classic layout customization story. Both agreed it's well-formed. Missing specific constraints on what 'layout' entails, but valid at epic/high-level.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Dashboard Layout Customization
+
+  Scenario: User adds a new widget to the dashboard
+    Given the user is on the dashboard page
+    When the user selects ""Add Widget""
+    And the user chooses a widget from the list
+    Then the widget should appear on the dashboard
+
+  Scenario: User removes a widget from the dashboard
+    Given the user is on the dashboard page
+    And a widget is present on the dashboard
+    When the user selects ""Remove Widget"" on the widget
+    Then the widget should no longer appear on the dashboard
+
+  Scenario: User rearranges widgets on the dashboard
+    Given the user is on the dashboard page
+    And multiple widgets are present on the dashboard
+    When the user drags a widget to a new position
+    Then the widget should be in the new position on the dashboard
+
+  Scenario: User saves the customized dashboard layout
+    Given the user has customized the dashboard layout
+    When the user selects ""Save Layout""
+    Then the customized layout should be saved
+    And the user should see a confirmation message
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the user is on the dashboard page')
+def step_impl(context):
+    context.browser.get('http://example.com/dashboard')
+
+@when('the user selects ""Add Widget""')
+def step_impl(context):
+    context.browser.find_element_by_id('add-widget-button').click()
+
+@when('the user chooses a widget from the list')
+def step_impl(context):
+    context.browser.find_element_by_id('widget-list').find_element_by_tag_name('li').click()
+
+@then('the widget should appear on the dashboard')
+def step_impl(context):
+    assert context.browser.find_element_by_class_name('widget').is_displayed()
+
+@given('a widget is present on the dashboard')
+def step_impl(context):
+    context.execute_steps('''
+        When the user selects ""Add Widget""
+        And the user chooses a widget from the list
+    ''')
+
+@when('the user selects ""Remove Widget"" on the widget')
+def step_impl(context):
+    context.browser.find_element_by_class_name('widget').find_element_by_class_name('remove-button').click()
+
+@then('the widget should no longer appear on the dashboard')
+def step_impl(context):
+    assert not context.browser.find_elements_by_class_name('widget')
+
+@given('multiple widgets are present on the dashboard')
+def step_impl(context):
+    context.execute_steps('''
+        When the user selects ""Add Widget""
+        And the user chooses a widget from the list
+        When the user selects ""Add Widget""
+        And the user chooses a widget from the list
+    ''')
+
+@when('the user drags a widget to a new position')
+def step_impl(context):
+    widget = context.browser.find_element_by_class_name('widget')
+    target_position = context.browser.find_element_by_id('target-position')
+    context.browser.drag_and_drop(widget, target_position)
+
+@then('the widget should be in the new position on the dashboard')
+def step_impl(context):
+    widget = context.browser.find_element_by_class_name('widget')
+    target_position = context.browser.find_element_by_id('target-position')
+    assert widget.location == target_position.location
+
+@given('the user has customized the dashboard layout')
+def step_impl(context):
+    context.execute_steps('''
+        When the user selects ""Add Widget""
+        And the user chooses a widget from the list
+        When the user drags a widget to a new position
+    ''')
+
+@when('the user selects ""Save Layout""')
+def step_impl(context):
+    context.browser.find_element_by_id('save-layout-button').click()
+
+@then('the customized layout should be saved')
+def step_impl(context):
+    assert context.browser.find_element_by_id('save-confirmation').is_displayed()
+
+@then('the user should see a confirmation message')
+def step_impl(context):
+    assert context.browser.find_element_by_id('save-confirmation').text == ""Layout saved successfully""
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the user can access the dashboard page.
+- [ ] Verify the ""Add Widget"" button is present and clickable.
+- [ ] Verify the widget list is displayed when ""Add Widget"" is selected.
+- [ ] Verify a widget can be added to the dashboard.
+- [ ] Verify a widget can be removed from the dashboard.
+- [ ] Verify multiple widgets can be added to the dashboard.
+- [ ] Verify widgets can be rearranged on the dashboard.
+- [ ] Verify the ""Save Layout"" button is present and clickable.
+- [ ] Verify the customized layout is saved after clicking ""Save Layout"".
+- [ ] Verify a confirmation message is displayed after saving the layout.",gpt-4o-2024-05-13,0.015394999999999999,None,2026-07-16 00:57:27
+US006,g08-frictionless.txt,Data Packaging,Medium,Researcher,an app that generates an OpenRefine reconciliation API endpoint from a Tabular Data Package,I can use it to clean messy data,Yes,App generates valid OpenRefine endpoint from a data package; Invalid data package returns error; Endpoint accessible and returns expected format; Messy data can be cleaned via the endpoint,3,2,2.0,Highly technical story; role 'Researcher' vague — not a system actor. Benefit is measurable ('clean messy data') but goal is too implementation-specific for a user story. Annotator 2 flagged missing acceptance criteria scope.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Generate OpenRefine reconciliation API endpoint from a Tabular Data Package
+
+  Scenario: Generate API endpoint from valid Tabular Data Package
+    Given I have a valid Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive a valid API endpoint URL
+
+  Scenario: Generate API endpoint from invalid Tabular Data Package
+    Given I have an invalid Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive an error message indicating the package is invalid
+
+  Scenario: Generate API endpoint from empty Tabular Data Package
+    Given I have an empty Tabular Data Package
+    When I request to generate an OpenRefine reconciliation API endpoint
+    Then I should receive an error message indicating the package is empty
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+import requests
+
+@given('I have a valid Tabular Data Package')
+def step_given_valid_tabular_data_package(context):
+    context.tabular_data_package = {
+        # Add valid Tabular Data Package details here
+    }
+
+@given('I have an invalid Tabular Data Package')
+def step_given_invalid_tabular_data_package(context):
+    context.tabular_data_package = {
+        # Add invalid Tabular Data Package details here
+    }
+
+@given('I have an empty Tabular Data Package')
+def step_given_empty_tabular_data_package(context):
+    context.tabular_data_package = {}
+
+@when('I request to generate an OpenRefine reconciliation API endpoint')
+def step_when_request_generate_api_endpoint(context):
+    response = requests.post('http://example.com/api/generate', json=context.tabular_data_package)
+    context.response = response
+
+@then('I should receive a valid API endpoint URL')
+def step_then_receive_valid_api_endpoint(context):
+    assert context.response.status_code == 200
+    assert 'api_endpoint' in context.response.json()
+
+@then('I should receive an error message indicating the package is invalid')
+def step_then_receive_invalid_package_error(context):
+    assert context.response.status_code == 400
+    assert context.response.json().get('error') == 'Invalid Tabular Data Package'
+
+@then('I should receive an error message indicating the package is empty')
+def step_then_receive_empty_package_error(context):
+    assert context.response.status_code == 400
+    assert context.response.json().get('error') == 'Empty Tabular Data Package'
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify the app accepts a valid Tabular Data Package.
+- [ ] Verify the app rejects an invalid Tabular Data Package.
+- [ ] Verify the app rejects an empty Tabular Data Package.
+- [ ] Verify the app generates a valid OpenRefine reconciliation API endpoint URL for a valid Tabular Data Package.
+- [ ] Verify the app returns an error message for an invalid Tabular Data Package.
+- [ ] Verify the app returns an error message for an empty Tabular Data Package.
+- [ ] Verify the response status code is 200 for a valid Tabular Data Package.
+- [ ] Verify the response status code is 400 for an invalid Tabular Data Package.
+- [ ] Verify the response status code is 400 for an empty Tabular Data Package.",gpt-4o-2024-05-13,0.010975,None,2026-07-16 00:57:29
+US007,g08-frictionless.txt,Data Packaging,Complex,developer,an DSpace integration,I can integrate data-packaged data with pipelines that use Dspace,Yes,DSpace integration connects successfully; Data package imported via DSpace pipeline; Integration fails gracefully with error message; Data integrity preserved after import,2,2,2.0,"Goal 'an DSpace integration' is a feature request, not a user goal — grammatically incorrect ('an DSpace') and too broad. Benefit is minimal ('integrate with pipelines'). Low testability without sub-stories.","**1. Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: DSpace Integration
+
+  Scenario: Successful integration of data-packaged data with DSpace
+    Given I have a valid data package
+    When I integrate the data package with DSpace
+    Then the data should be successfully integrated into the DSpace pipeline
+
+  Scenario: Integration with invalid data package
+    Given I have an invalid data package
+    When I attempt to integrate the data package with DSpace
+    Then I should receive an error message indicating the data package is invalid
+
+  Scenario: Integration with missing data package
+    Given I do not have a data package
+    When I attempt to integrate with DSpace
+    Then I should receive an error message indicating the data package is missing
+
+  Scenario: Integration with DSpace when DSpace is down
+    Given I have a valid data package
+    And DSpace is down
+    When I attempt to integrate the data package with DSpace
+    Then I should receive an error message indicating DSpace is unavailable
+```
+
+**2. Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I have a valid data package')
+def step_given_valid_data_package(context):
+    context.data_package = ""valid_data_package""
+
+@given('I have an invalid data package')
+def step_given_invalid_data_package(context):
+    context.data_package = ""invalid_data_package""
+
+@given('I do not have a data package')
+def step_given_no_data_package(context):
+    context.data_package = None
+
+@given('DSpace is down')
+def step_given_dspace_is_down(context):
+    context.dspace_status = ""down""
+
+@when('I integrate the data package with DSpace')
+def step_when_integrate_with_dspace(context):
+    if context.data_package == ""valid_data_package"" and context.dspace_status != ""down"":
+        context.integration_result = ""success""
+    elif context.data_package == ""invalid_data_package"":
+        context.integration_result = ""error_invalid_package""
+    elif context.data_package is None:
+        context.integration_result = ""error_missing_package""
+    elif context.dspace_status == ""down"":
+        context.integration_result = ""error_dspace_unavailable""
+
+@then('the data should be successfully integrated into the DSpace pipeline')
+def step_then_successful_integration(context):
+    assert context.integration_result == ""success""
+
+@then('I should receive an error message indicating the data package is invalid')
+def step_then_error_invalid_package(context):
+    assert context.integration_result == ""error_invalid_package""
+
+@then('I should receive an error message indicating the data package is missing')
+def step_then_error_missing_package(context):
+    assert context.integration_result == ""error_missing_package""
+
+@then('I should receive an error message indicating DSpace is unavailable')
+def step_then_error_dspace_unavailable(context):
+    assert context.integration_result == ""error_dspace_unavailable""
+```
+
+**3. Validation Checklist:**
+
+- [ ] Verify that a valid data package can be successfully integrated with DSpace.
+- [ ] Verify that an invalid data package results in an error message indicating the data package is invalid.
+- [ ] Verify that attempting to integrate without a data package results in an error message indicating the data package is missing.
+- [ ] Verify that attempting to integrate with DSpace when DSpace is down results in an error message indicating DSpace is unavailable.
+- [ ] Ensure that the integration process handles all edge cases and error conditions appropriately.
+- [ ] Validate that the system logs appropriate messages for successful and failed integration attempts.
+- [ ] Confirm that the integration process does not leave any partial or corrupt data in DSpace in case of failure.",gpt-4o-2024-05-13,0.01183,None,2026-07-16 00:57:32
+US008,g04-recycling.txt,Recycling & Facilities,Complex,user,to be able to browse through the list of facolities and see which ones are environment-friendly,I can know for sure my waste is not going to leave a negative ecological footprint,Yes,Browse facility list with ecological rating visible; Filter facilities by ecological impact; Facility detail shows waste disposal method; User can confirm facility meets environmental standard,4,3,4.0,Meaningful civic story; typo ('facolities') noted. Benefit about ecological impact is clear and testable. Annotator 2 noted goal is compound — 'browse AND see' should be split.,"### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Browse Environment-Friendly Facilities
+
+  Scenario: User views the list of facilities
+    Given the user is on the facilities page
+    When the user browses through the list of facilities
+    Then the user should see a list of facilities
+
+  Scenario: User identifies environment-friendly facilities
+    Given the user is on the facilities page
+    When the user browses through the list of facilities
+    Then the user should see which facilities are environment-friendly
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the user is on the facilities page')
+def step_given_user_on_facilities_page(context):
+    context.browser.get('http://example.com/facilities')
+
+@when('the user browses through the list of facilities')
+def step_when_user_browses_facilities(context):
+    context.facilities_list = context.browser.find_elements_by_class_name('facility')
+
+@then('the user should see a list of facilities')
+def step_then_user_sees_list_of_facilities(context):
+    assert len(context.facilities_list) > 0, ""No facilities found""
+
+@then('the user should see which facilities are environment-friendly')
+def step_then_user_sees_environment_friendly_facilities(context):
+    env_friendly_facilities = [facility for facility in context.facilities_list if 'environment-friendly' in facility.get_attribute('class')]
+    assert len(env_friendly_facilities) > 0, ""No environment-friendly facilities found""
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the user can navigate to the facilities page.
+- [ ] Verify the list of facilities is displayed on the facilities page.
+- [ ] Verify each facility in the list is displayed with relevant details.
+- [ ] Verify environment-friendly facilities are clearly marked.
+- [ ] Verify the marking for environment-friendly facilities is consistent and visible.
+- [ ] Verify the user can distinguish between environment-friendly and non-environment-friendly facilities.
+- [ ] Verify the page loads within acceptable time limits.
+- [ ] Verify the user interface is responsive and accessible.",gpt-4o-2024-05-13,0.00721,None,2026-07-16 00:57:34
+US009,g24-unibath.txt,University Research Archive,Complex,depositor,to link datasets with the project DMP,compliance with DMP can be demonstrated and whole project workflow is linked together,Yes,Dataset links to DMP successfully; Link visible in both dataset and DMP records; Unlinking removes the association; DMP compliance status updated after link,4,4,4.0,Clear data management story; compliance angle makes benefit concrete. Linkage and unlinkage both testable. Domain (research data) may require specialist knowledge to evaluate fully.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Link datasets with the project DMP
+
+  Scenario: Successfully link a dataset with the project DMP
+    Given I am a logged-in depositor
+    And I have a dataset ready to be linked
+    And I have access to the project DMP
+    When I link the dataset with the project DMP
+    Then the dataset should be linked with the project DMP
+    And I should see a confirmation message
+
+  Scenario: Attempt to link a dataset without access to the project DMP
+    Given I am a logged-in depositor
+    And I have a dataset ready to be linked
+    And I do not have access to the project DMP
+    When I attempt to link the dataset with the project DMP
+    Then I should see an error message indicating lack of access
+
+  Scenario: Attempt to link a dataset that is already linked
+    Given I am a logged-in depositor
+    And I have a dataset that is already linked to the project DMP
+    When I attempt to link the dataset with the project DMP again
+    Then I should see an error message indicating the dataset is already linked
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a logged-in depositor')
+def step_impl(context):
+    context.user = login_as_depositor()
+
+@given('I have a dataset ready to be linked')
+def step_impl(context):
+    context.dataset = get_ready_dataset()
+
+@given('I have access to the project DMP')
+def step_impl(context):
+    context.dmp_access = check_dmp_access(context.user)
+
+@given('I do not have access to the project DMP')
+def step_impl(context):
+    context.dmp_access = False
+
+@given('I have a dataset that is already linked to the project DMP')
+def step_impl(context):
+    context.dataset = get_already_linked_dataset()
+
+@when('I link the dataset with the project DMP')
+def step_impl(context):
+    if context.dmp_access:
+        context.link_result = link_dataset_to_dmp(context.dataset)
+    else:
+        context.link_result = 'error_no_access'
+
+@when('I attempt to link the dataset with the project DMP')
+def step_impl(context):
+    if context.dmp_access:
+        context.link_result = link_dataset_to_dmp(context.dataset)
+    else:
+        context.link_result = 'error_no_access'
+
+@then('the dataset should be linked with the project DMP')
+def step_impl(context):
+    assert context.link_result == 'success'
+
+@then('I should see a confirmation message')
+def step_impl(context):
+    assert get_confirmation_message() == 'Dataset successfully linked to DMP'
+
+@then('I should see an error message indicating lack of access')
+def step_impl(context):
+    assert context.link_result == 'error_no_access'
+    assert get_error_message() == 'You do not have access to the project DMP'
+
+@then('I should see an error message indicating the dataset is already linked')
+def step_impl(context):
+    assert context.link_result == 'error_already_linked'
+    assert get_error_message() == 'This dataset is already linked to the project DMP'
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is logged in as a depositor.
+- [ ] Verify that the dataset is ready to be linked.
+- [ ] Verify that the user has access to the project DMP.
+- [ ] Verify that the dataset can be linked to the project DMP.
+- [ ] Verify that a confirmation message is displayed upon successful linking.
+- [ ] Verify that an error message is displayed if the user does not have access to the project DMP.
+- [ ] Verify that an error message is displayed if the dataset is already linked to the project DMP.",gpt-4o-2024-05-13,0.012610000000000001,None,2026-07-16 00:57:37
+US010,parabol_blog,Parabol: Loan Management,Medium,loan processor,"to be able to track the status of a loan application, so I can manage my work effectively",I can manage my work effectively,Yes,1. Enter valid application ID and see 'In Progress' status. 2. Verify status updates to 'Approved' in real-time when backend changes. 3. Display submission date.,3,3,3.0,Missing explicit benefit originally. Disagreement stems from whether 'manage my work' is a strong enough business value. Resolved based on A1's stricter criteria.,"**(1) Gherkin scenarios in .feature format:**
+
+```gherkin
+Feature: Loan Application Status Tracking
+
+  Scenario: View the status of a loan application
+    Given I am logged in as a loan processor
+    When I navigate to the loan application tracking page
+    And I enter the loan application ID
+    And I click on the ""Check Status"" button
+    Then I should see the current status of the loan application
+
+  Scenario: Update the status of a loan application
+    Given I am logged in as a loan processor
+    When I navigate to the loan application tracking page
+    And I enter the loan application ID
+    And I select a new status from the status dropdown
+    And I click on the ""Update Status"" button
+    Then I should see a confirmation message that the status has been updated
+    And the new status should be displayed for the loan application
+```
+
+**(2) Step definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a loan processor')
+def step_impl(context):
+    context.browser.get('http://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('loan_processor')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('I navigate to the loan application tracking page')
+def step_impl(context):
+    context.browser.get('http://example.com/loan-tracking')
+
+@when('I enter the loan application ID')
+def step_impl(context):
+    context.browser.find_element_by_id('loan_id').send_keys('12345')
+
+@when('I click on the ""Check Status"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('check_status').click()
+
+@then('I should see the current status of the loan application')
+def step_impl(context):
+    status = context.browser.find_element_by_id('loan_status').text
+    assert status is not None
+
+@when('I select a new status from the status dropdown')
+def step_impl(context):
+    dropdown = context.browser.find_element_by_id('status_dropdown')
+    for option in dropdown.find_elements_by_tag_name('option'):
+        if option.text == 'Approved':
+            option.click()
+            break
+
+@when('I click on the ""Update Status"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('update_status').click()
+
+@then('I should see a confirmation message that the status has been updated')
+def step_impl(context):
+    message = context.browser.find_element_by_id('confirmation_message').text
+    assert message == 'Status updated successfully'
+
+@then('the new status should be displayed for the loan application')
+def step_impl(context):
+    status = context.browser.find_element_by_id('loan_status').text
+    assert status == 'Approved'
+```
+
+**(3) Validation checklist:**
+
+- [ ] Verify that the loan processor can log in successfully.
+- [ ] Verify that the loan processor can navigate to the loan application tracking page.
+- [ ] Verify that the loan processor can enter a loan application ID.
+- [ ] Verify that the loan processor can click the ""Check Status"" button.
+- [ ] Verify that the current status of the loan application is displayed.
+- [ ] Verify that the loan processor can select a new status from the status dropdown.
+- [ ] Verify that the loan processor can click the ""Update Status"" button.
+- [ ] Verify that a confirmation message is displayed after updating the status.
+- [ ] Verify that the new status is displayed for the loan application after updating.",gpt-4o-2024-05-13,0.01171,None,2026-07-16 00:57:41
+US011,g18-neurohub.txt,Neuroscience Research Platform,Complex,system administrator,to migrate data from an older version of NeuroHub to the current version,Benefit not explicitly stated.,Yes,1. Run migration script on v1.0 DB. 2. Check logs for 0 missing records in v2.0 DB. 3. Verify specific edge case: old null fields map to default values in current version.,3,3,3.0,"A1 flagged this as an engineering task (migration), not a user story. A2 agreed it lacks a true end-user benefit. Scored low.","**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Data Migration from Older Version of NeuroHub to Current Version
+
+  Scenario: Successful data migration
+    Given the older version of NeuroHub is running
+    And the current version of NeuroHub is running
+    When I initiate the data migration process
+    Then the data should be successfully migrated to the current version
+    And the data integrity should be maintained
+
+  Scenario: Data migration with missing data
+    Given the older version of NeuroHub is running
+    And the current version of NeuroHub is running
+    And some data is missing in the older version
+    When I initiate the data migration process
+    Then the migration should complete with warnings about missing data
+    And the existing data should be successfully migrated to the current version
+
+  Scenario: Data migration with corrupted data
+    Given the older version of NeuroHub is running
+    And the current version of NeuroHub is running
+    And some data is corrupted in the older version
+    When I initiate the data migration process
+    Then the migration should fail with an error message about corrupted data
+    And no data should be migrated to the current version
+
+  Scenario: Data migration with network interruption
+    Given the older version of NeuroHub is running
+    And the current version of NeuroHub is running
+    When I initiate the data migration process
+    And the network connection is interrupted
+    Then the migration should pause and resume once the connection is restored
+    And the data should be successfully migrated to the current version
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('the older version of NeuroHub is running')
+def step_impl(context):
+    context.older_version_running = True
+
+@given('the current version of NeuroHub is running')
+def step_impl(context):
+    context.current_version_running = True
+
+@when('I initiate the data migration process')
+def step_impl(context):
+    if context.older_version_running and context.current_version_running:
+        context.migration_initiated = True
+
+@then('the data should be successfully migrated to the current version')
+def step_impl(context):
+    assert context.migration_initiated is True
+    assert context.data_integrity_maintained is True
+
+@then('the data integrity should be maintained')
+def step_impl(context):
+    context.data_integrity_maintained = True
+
+@given('some data is missing in the older version')
+def step_impl(context):
+    context.data_missing = True
+
+@then('the migration should complete with warnings about missing data')
+def step_impl(context):
+    assert context.data_missing is True
+    context.migration_completed_with_warnings = True
+
+@then('the existing data should be successfully migrated to the current version')
+def step_impl(context):
+    assert context.migration_initiated is True
+    assert context.data_integrity_maintained is True
+
+@given('some data is corrupted in the older version')
+def step_impl(context):
+    context.data_corrupted = True
+
+@then('the migration should fail with an error message about corrupted data')
+def step_impl(context):
+    assert context.data_corrupted is True
+    context.migration_failed = True
+
+@then('no data should be migrated to the current version')
+def step_impl(context):
+    assert context.migration_failed is True
+
+@when('the network connection is interrupted')
+def step_impl(context):
+    context.network_interrupted = True
+
+@then('the migration should pause and resume once the connection is restored')
+def step_impl(context):
+    if context.network_interrupted:
+        context.migration_paused = True
+        context.network_interrupted = False
+        context.migration_resumed = True
+
+@then('the data should be successfully migrated to the current version')
+def step_impl(context):
+    assert context.migration_resumed is True
+    assert context.data_integrity_maintained is True
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify the older version of NeuroHub is running.
+- [ ] Verify the current version of NeuroHub is running.
+- [ ] Initiate the data migration process.
+- [ ] Check if the data is successfully migrated to the current version.
+- [ ] Ensure data integrity is maintained after migration.
+- [ ] Verify behavior when some data is missing in the older version.
+- [ ] Ensure migration completes with warnings about missing data.
+- [ ] Verify behavior when some data is corrupted in the older version.
+- [ ] Ensure migration fails with an error message about corrupted data.
+- [ ] Verify no data is migrated when there is corrupted data.
+- [ ] Simulate network interruption during migration.
+- [ ] Ensure migration pauses and resumes once the connection is restored.
+- [ ] Verify data is successfully migrated after network interruption.",gpt-4o-2024-05-13,0.01534,None,2026-07-16 00:57:46
+US012,g17-cask.txt,Data Application Platform (CASK/CDAP),Complex,user,to specify schema as a SQL schema string,Benefit not explicitly stated.,Yes,"1. Input 'CREATE TABLE x (id INT)' and verify schema parsing. 2. Input invalid SQL 'CREATE TBL' and return syntax error line. 3. Reject SQL injection commands (DROP, DELETE).",2,2,2.0,"Extremely technical. 'Specify schema as SQL string' is an implementation detail, not a user need. Both annotators penalized this heavily.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Specify SQL Schema
+
+  Scenario: User specifies a valid SQL schema string
+    Given the user has access to the schema input field
+    When the user inputs a valid SQL schema string
+    And submits the schema
+    Then the system should accept the schema
+    And display a success message
+
+  Scenario: User specifies an invalid SQL schema string
+    Given the user has access to the schema input field
+    When the user inputs an invalid SQL schema string
+    And submits the schema
+    Then the system should reject the schema
+    And display an error message
+
+  Scenario: User submits an empty SQL schema string
+    Given the user has access to the schema input field
+    When the user inputs an empty SQL schema string
+    And submits the schema
+    Then the system should reject the schema
+    And display an error message
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from hamcrest import assert_that, equal_to
+
+@given('the user has access to the schema input field')
+def step_impl(context):
+    context.schema_input_field = True
+
+@when('the user inputs a valid SQL schema string')
+def step_impl(context):
+    context.schema_string = ""CREATE TABLE test (id INT PRIMARY KEY, name VARCHAR(100));""
+
+@when('the user inputs an invalid SQL schema string')
+def step_impl(context):
+    context.schema_string = ""INVALID SQL SCHEMA""
+
+@when('the user inputs an empty SQL schema string')
+def step_impl(context):
+    context.schema_string = """"
+
+@when('submits the schema')
+def step_impl(context):
+    if context.schema_string == """":
+        context.response = ""error""
+        context.message = ""Schema cannot be empty""
+    elif context.schema_string.startswith(""CREATE TABLE""):
+        context.response = ""success""
+        context.message = ""Schema accepted""
+    else:
+        context.response = ""error""
+        context.message = ""Invalid schema""
+
+@then('the system should accept the schema')
+def step_impl(context):
+    assert_that(context.response, equal_to(""success""))
+
+@then('display a success message')
+def step_impl(context):
+    assert_that(context.message, equal_to(""Schema accepted""))
+
+@then('the system should reject the schema')
+def step_impl(context):
+    assert_that(context.response, equal_to(""error""))
+
+@then('display an error message')
+def step_impl(context):
+    assert_that(context.message, equal_to(""Invalid schema""))
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the user has access to the schema input field.
+- [ ] Validate that a valid SQL schema string is accepted.
+- [ ] Validate that an invalid SQL schema string is rejected.
+- [ ] Validate that an empty SQL schema string is rejected.
+- [ ] Ensure a success message is displayed for a valid schema.
+- [ ] Ensure an error message is displayed for an invalid schema.
+- [ ] Ensure an error message is displayed for an empty schema.",gpt-4o-2024-05-13,0.009845,None,2026-07-16 00:57:49
+US013,g27-culrepo.txt,Library Repository,Simple,researcher,to contact the author of a work that interests me,I can learn more about my research,Yes,1. Click 'Contact Author' on a paper page. 2. Fill 500-char message and submit. 3. Verify recipient gets email with correct reply-to headers.,4,3,4.0,"Clear, concise. 'Contact the author' is a standard feature. A2 noted that it doesn't specify the communication channel (email vs in-app).","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Contact Author
+  As a researcher
+  I want to contact the author of a work that interests me
+  So that I can learn more about my research
+
+  Scenario: Researcher views author contact information
+    Given I am on the work's detail page
+    When I click on the ""Contact Author"" button
+    Then I should see the author's contact information
+
+  Scenario: Researcher sends a message to the author
+    Given I am on the author's contact page
+    When I fill in the message form with my query
+    And I click the ""Send"" button
+    Then the author should receive my message
+    And I should see a confirmation message
+
+  Scenario: Researcher receives an error for incomplete message form
+    Given I am on the author's contact page
+    When I leave the message form incomplete
+    And I click the ""Send"" button
+    Then I should see an error message indicating the form is incomplete
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('I am on the work\'s detail page')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+    context.browser.get('http://example.com/work-detail')
+
+@when('I click on the ""Contact Author"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('contact-author-button').click()
+
+@then('I should see the author\'s contact information')
+def step_impl(context):
+    contact_info = context.browser.find_element_by_id('author-contact-info')
+    assert contact_info.is_displayed()
+
+@given('I am on the author\'s contact page')
+def step_impl(context):
+    context.browser.get('http://example.com/author-contact')
+
+@when('I fill in the message form with my query')
+def step_impl(context):
+    context.browser.find_element_by_id('message-form').send_keys('My research query')
+
+@when('I click the ""Send"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('send-button').click()
+
+@then('the author should receive my message')
+def step_impl(context):
+    # This step would require backend verification, which is not shown here
+    pass
+
+@then('I should see a confirmation message')
+def step_impl(context):
+    confirmation_message = context.browser.find_element_by_id('confirmation-message')
+    assert confirmation_message.is_displayed()
+
+@when('I leave the message form incomplete')
+def step_impl(context):
+    context.browser.find_element_by_id('message-form').clear()
+
+@then('I should see an error message indicating the form is incomplete')
+def step_impl(context):
+    error_message = context.browser.find_element_by_id('error-message')
+    assert error_message.is_displayed()
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the ""Contact Author"" button is present on the work's detail page.
+- [ ] Verify that clicking the ""Contact Author"" button navigates to the author's contact page.
+- [ ] Verify that the author's contact information is displayed on the contact page.
+- [ ] Verify that the message form is present on the author's contact page.
+- [ ] Verify that the message form can be filled with a query.
+- [ ] Verify that clicking the ""Send"" button sends the message to the author.
+- [ ] Verify that a confirmation message is displayed after sending the message.
+- [ ] Verify that an error message is displayed when the message form is incomplete and the ""Send"" button is clicked.",gpt-4o-2024-05-13,0.011604999999999999,None,2026-07-16 00:57:52
+US014,g26-racdam.txt,Digital Asset Management,Simple,assistant archivist,to upload and tag staff generated working papers,staff and researchers are able to easily access them,Yes,"1. Upload 10MB PDF working paper. 2. Tag with '2026', 'Finance'. 3. Search 'Finance' and verify document is top result.",4,4,4.0,Slight disagreement on role clarity ('staff generated'). Resolved to higher score as the business value is very clear to researchers.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Upload and tag staff generated working papers
+
+  Scenario: Successfully upload and tag a working paper
+    Given I am an assistant archivist
+    When I upload a working paper
+    And I tag the working paper with relevant tags
+    Then the working paper should be available for staff and researchers
+    And the working paper should be searchable by the tags
+
+  Scenario: Upload a working paper without tags
+    Given I am an assistant archivist
+    When I upload a working paper without tags
+    Then I should see an error message indicating that tags are required
+
+  Scenario: Upload a working paper with invalid file format
+    Given I am an assistant archivist
+    When I attempt to upload a working paper with an invalid file format
+    Then I should see an error message indicating that the file format is not supported
+
+  Scenario: Search for a working paper by tag
+    Given a working paper is uploaded and tagged
+    When I search for the working paper using a tag
+    Then I should see the working paper in the search results
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am an assistant archivist')
+def step_impl(context):
+    context.user_role = 'assistant archivist'
+
+@when('I upload a working paper')
+def step_impl(context):
+    context.upload_status = 'success'
+    context.tags = ['relevant', 'tags']
+
+@when('I tag the working paper with relevant tags')
+def step_impl(context):
+    context.tag_status = 'success'
+
+@then('the working paper should be available for staff and researchers')
+def step_impl(context):
+    assert context.upload_status == 'success'
+    assert context.tag_status == 'success'
+
+@then('the working paper should be searchable by the tags')
+def step_impl(context):
+    assert 'relevant' in context.tags
+    assert 'tags' in context.tags
+
+@when('I upload a working paper without tags')
+def step_impl(context):
+    context.upload_status = 'success'
+    context.tags = []
+
+@then('I should see an error message indicating that tags are required')
+def step_impl(context):
+    assert not context.tags
+    context.error_message = 'Tags are required'
+    assert context.error_message == 'Tags are required'
+
+@when('I attempt to upload a working paper with an invalid file format')
+def step_impl(context):
+    context.upload_status = 'failed'
+    context.error_message = 'Invalid file format'
+
+@then('I should see an error message indicating that the file format is not supported')
+def step_impl(context):
+    assert context.upload_status == 'failed'
+    assert context.error_message == 'Invalid file format'
+
+@given('a working paper is uploaded and tagged')
+def step_impl(context):
+    context.upload_status = 'success'
+    context.tags = ['relevant', 'tags']
+
+@when('I search for the working paper using a tag')
+def step_impl(context):
+    context.search_results = ['working_paper_1']
+
+@then('I should see the working paper in the search results')
+def step_impl(context):
+    assert 'working_paper_1' in context.search_results
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is an assistant archivist.
+- [ ] Verify that a working paper can be uploaded.
+- [ ] Verify that tags can be added to the working paper.
+- [ ] Verify that the working paper is available for staff and researchers after upload.
+- [ ] Verify that the working paper is searchable by the tags.
+- [ ] Verify that an error message is shown when uploading a working paper without tags.
+- [ ] Verify that an error message is shown when uploading a working paper with an invalid file format.
+- [ ] Verify that a working paper can be found using a tag in the search functionality.",gpt-4o-2024-05-13,0.01259,None,2026-07-16 00:57:56
+US015,g03-loudoun.txt,Government Services,Complex,Applicant,to Complete Building Development Project,I can receive any posted bond and/or obtain occupancy,Yes,Application form submission triggers project completion step; System validates required fields before completion; Bond released on successful completion; Occupancy permit issued after approval,3,2,2.0,Goal 'Complete Building Development Project' is extremely vague — could mean dozens of sub-tasks. Benefit (bond + occupancy) is concrete but story is too high-level to generate focused acceptance tests. Annotator 2 marked as needs decomposition.,"(1) Gherkin scenarios in .feature format:
+
+```gherkin
+Feature: Complete Building Development Project
+
+  Scenario: Applicant completes the building development project
+    Given the applicant has a building development project
+    When the applicant completes the building development project
+    Then the applicant should be able to receive any posted bond
+    And the applicant should be able to obtain occupancy
+```
+
+(2) Step definitions in Python:
+
+```python
+from behave import given, when, then
+
+@given('the applicant has a building development project')
+def step_given_applicant_has_project(context):
+    context.project = ""Building Development Project""
+
+@when('the applicant completes the building development project')
+def step_when_applicant_completes_project(context):
+    context.project_status = ""Completed""
+
+@then('the applicant should be able to receive any posted bond')
+def step_then_receive_bond(context):
+    assert context.project_status == ""Completed""
+    context.bond_received = True
+    assert context.bond_received is True
+
+@then('the applicant should be able to obtain occupancy')
+def step_then_obtain_occupancy(context):
+    assert context.project_status == ""Completed""
+    context.occupancy_obtained = True
+    assert context.occupancy_obtained is True
+```
+
+(3) Validation checklist:
+
+- [ ] Verify the applicant has a building development project.
+- [ ] Verify the applicant completes the building development project.
+- [ ] Verify the applicant can receive any posted bond upon project completion.
+- [ ] Verify the applicant can obtain occupancy upon project completion.",gpt-4o-2024-05-13,0.005265,None,2026-07-16 00:57:57
+US016,g21-badcamp.txt,Conference Management,Complex,anonymoususer,"to have the training options clearly marked for the following information: day and time of training, title, short summary, trainers, level, number of registrations, remaining registrations, location of training, link to full details of the training, register now link",I can shop for training all with one page AND find their class on on one page,Yes,"Training page shows all options (name, cost, dates, location, skill level, prerequisites); All classes on one page with filtering; Clicking class links to detailed class page; Page loads correctly without sign-in",4,4,4.0,Good story with multiple concrete data fields in goal. Benefit (shop + find on one page) is dual but both are measurable. Some ambiguity around 'clearly marked' — needs definition of done.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Training options display
+
+  Scenario: Display training options with all required information
+    Given I am an anonymous user on the training page
+    When I view the list of training options
+    Then I should see the day and time of training for each option
+    And I should see the title of each training option
+    And I should see a short summary of each training option
+    And I should see the trainers for each training option
+    And I should see the level of each training option
+    And I should see the number of registrations for each training option
+    And I should see the remaining registrations for each training option
+    And I should see the location of each training option
+    And I should see a link to full details of each training option
+    And I should see a ""register now"" link for each training option
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am an anonymous user on the training page')
+def step_impl(context):
+    context.browser.get('http://example.com/training')
+
+@when('I view the list of training options')
+def step_impl(context):
+    context.training_options = context.browser.find_elements_by_class_name('training-option')
+
+@then('I should see the day and time of training for each option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('day-time').is_displayed()
+
+@then('I should see the title of each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('title').is_displayed()
+
+@then('I should see a short summary of each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('summary').is_displayed()
+
+@then('I should see the trainers for each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('trainers').is_displayed()
+
+@then('I should see the level of each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('level').is_displayed()
+
+@then('I should see the number of registrations for each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('registrations').is_displayed()
+
+@then('I should see the remaining registrations for each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('remaining-registrations').is_displayed()
+
+@then('I should see the location of each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('location').is_displayed()
+
+@then('I should see a link to full details of each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('full-details-link').is_displayed()
+
+@then('I should see a ""register now"" link for each training option')
+def step_impl(context):
+    for option in context.training_options:
+        assert option.find_element_by_class_name('register-now-link').is_displayed()
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify the day and time of training is displayed for each training option.
+- [ ] Verify the title of each training option is displayed.
+- [ ] Verify a short summary of each training option is displayed.
+- [ ] Verify the trainers for each training option are displayed.
+- [ ] Verify the level of each training option is displayed.
+- [ ] Verify the number of registrations for each training option is displayed.
+- [ ] Verify the remaining registrations for each training option are displayed.
+- [ ] Verify the location of each training option is displayed.
+- [ ] Verify a link to full details of each training option is displayed.
+- [ ] Verify a ""register now"" link for each training option is displayed.",gpt-4o-2024-05-13,0.01373,None,2026-07-16 00:58:00
+US017,parabol_blog,Parabol: Login,Simple,user,an option to stay logged in,I don't have to enter my credentials every time,Yes,"1. Check 'Stay logged in', close browser, reopen, verify session active. 2. Force session expiry on backend, verify next page load redirects to login.",2,3,3.0,Very simple utility story. 'Option to stay logged in'. Annotators gave mid-range scores due to lack of specificity on security constraints (timeout period).,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Stay logged in option
+
+  Scenario: User selects the 'Stay logged in' option
+    Given the user is on the login page
+    When the user enters valid credentials
+    And the user selects the 'Stay logged in' checkbox
+    And the user clicks the login button
+    Then the user should be logged in
+    And the 'Stay logged in' option should be enabled
+
+  Scenario: User is automatically logged in on returning to the site
+    Given the user has previously selected the 'Stay logged in' option
+    And the user is not currently logged in
+    When the user navigates to the site
+    Then the user should be automatically logged in
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('the user is on the login page')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+    context.browser.get('http://example.com/login')
+
+@when('the user enters valid credentials')
+def step_impl(context):
+    context.browser.find_element_by_id('username').send_keys('valid_user')
+    context.browser.find_element_by_id('password').send_keys('valid_password')
+
+@when('the user selects the ""Stay logged in"" checkbox')
+def step_impl(context):
+    context.browser.find_element_by_id('stay_logged_in').click()
+
+@when('the user clicks the login button')
+def step_impl(context):
+    context.browser.find_element_by_id('login_button').click()
+
+@then('the user should be logged in')
+def step_impl(context):
+    assert context.browser.find_element_by_id('logout_button').is_displayed()
+
+@then('the ""Stay logged in"" option should be enabled')
+def step_impl(context):
+    assert context.browser.find_element_by_id('stay_logged_in').is_selected()
+
+@given('the user has previously selected the ""Stay logged in"" option')
+def step_impl(context):
+    context.execute_steps('''
+        Given the user is on the login page
+        When the user enters valid credentials
+        And the user selects the ""Stay logged in"" checkbox
+        And the user clicks the login button
+    ''')
+
+@given('the user is not currently logged in')
+def step_impl(context):
+    context.browser.delete_all_cookies()
+
+@when('the user navigates to the site')
+def step_impl(context):
+    context.browser.get('http://example.com')
+
+@then('the user should be automatically logged in')
+def step_impl(context):
+    assert context.browser.find_element_by_id('logout_button').is_displayed()
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the login page is accessible.
+- [ ] Verify the 'Stay logged in' checkbox is present on the login page.
+- [ ] Verify the user can enter valid credentials.
+- [ ] Verify the user can select the 'Stay logged in' checkbox.
+- [ ] Verify the user can click the login button.
+- [ ] Verify the user is logged in after clicking the login button.
+- [ ] Verify the 'Stay logged in' option remains enabled after login.
+- [ ] Verify the user is automatically logged in when returning to the site after selecting 'Stay logged in'.
+- [ ] Verify the user is not logged in if the 'Stay logged in' option was not selected.
+- [ ] Verify the user can log out manually even if 'Stay logged in' was selected.",gpt-4o-2024-05-13,0.011219999999999999,None,2026-07-16 00:58:03
+US018,g02-federalspending.txt,Federal Spending,Simple,Agency user,to accurately see who created a submission,I'm not confused about who last updated a submission,Yes,Submission creator name is displayed correctly; Last updated user is shown distinctly from creator; Submission history shows both create and update events; No confusion when same user creates and updates,4,4,4.0,"Simple, clear story about data provenance. Benefit ('not confused') is business-meaningful and testable. Edge case: same user creates and updates — needs explicit test.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Display submission creator
+  As an Agency user
+  I want to accurately see who created a submission
+  So that I'm not confused about who last updated a submission
+
+  Scenario: View submission creator
+    Given I am logged in as an Agency user
+    When I view a submission
+    Then I should see the name of the user who created the submission
+
+  Scenario: View submission last updated by
+    Given I am logged in as an Agency user
+    When I view a submission
+    Then I should see the name of the user who last updated the submission
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as an Agency user')
+def step_impl(context):
+    context.browser.get('http://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('agency_user')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('I view a submission')
+def step_impl(context):
+    context.browser.get('http://example.com/submissions/1')
+
+@then('I should see the name of the user who created the submission')
+def step_impl(context):
+    creator_name = context.browser.find_element_by_id('creator_name').text
+    assert creator_name == 'Expected Creator Name', f""Expected 'Expected Creator Name' but got {creator_name}""
+
+@then('I should see the name of the user who last updated the submission')
+def step_impl(context):
+    last_updated_by = context.browser.find_element_by_id('last_updated_by').text
+    assert last_updated_by == 'Expected Updater Name', f""Expected 'Expected Updater Name' but got {last_updated_by}""
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the Agency user can log in successfully.
+- [ ] Verify that the submission page loads correctly.
+- [ ] Verify that the name of the user who created the submission is displayed.
+- [ ] Verify that the name of the user who last updated the submission is displayed.
+- [ ] Verify that the displayed creator name is accurate.
+- [ ] Verify that the displayed last updated by name is accurate.
+- [ ] Verify that the UI elements for creator name and last updated by name are correctly identified by their IDs.
+- [ ] Verify that error messages are shown if the creator or last updated by names are not found.",gpt-4o-2024-05-13,0.00835,None,2026-07-16 00:58:05
+US019,g23-archivesspace.txt,Archives Management,Simple,Archivist,to create and edit a Resource record,Benefit not explicitly stated.,Yes,"1. Click 'New Resource', fill all mandatory fields, hit Save. 2. Edit title of existing Resource. 3. Leave 'Resource Type' blank and check inline validation error.",3,3,3.0,Missing benefit entirely. 'Create and edit a Resource record' is standard CRUD. Disagreement resolved to lower score due to missing 'Why'.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Create and Edit Resource Record
+
+  Scenario: Create a new Resource record
+    Given I am logged in as an Archivist
+    When I navigate to the ""Create Resource"" page
+    And I fill in the resource details
+    And I submit the form
+    Then I should see a confirmation message
+    And the new resource should be listed in the resource list
+
+  Scenario: Edit an existing Resource record
+    Given I am logged in as an Archivist
+    And a resource record exists
+    When I navigate to the ""Edit Resource"" page for that resource
+    And I update the resource details
+    And I submit the form
+    Then I should see a confirmation message
+    And the updated resource should be listed in the resource list
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as an Archivist')
+def step_impl(context):
+    context.browser.get('http://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('archivist')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('I navigate to the ""Create Resource"" page')
+def step_impl(context):
+    context.browser.get('http://example.com/create-resource')
+
+@when('I fill in the resource details')
+def step_impl(context):
+    context.browser.find_element_by_id('title').send_keys('New Resource')
+    context.browser.find_element_by_id('description').send_keys('Resource Description')
+
+@when('I submit the form')
+def step_impl(context):
+    context.browser.find_element_by_id('submit').click()
+
+@then('I should see a confirmation message')
+def step_impl(context):
+    assert context.browser.find_element_by_id('confirmation').is_displayed()
+
+@then('the new resource should be listed in the resource list')
+def step_impl(context):
+    context.browser.get('http://example.com/resource-list')
+    assert 'New Resource' in context.browser.page_source
+
+@given('a resource record exists')
+def step_impl(context):
+    context.execute_steps('''
+        When I navigate to the ""Create Resource"" page
+        And I fill in the resource details
+        And I submit the form
+    ''')
+
+@when('I navigate to the ""Edit Resource"" page for that resource')
+def step_impl(context):
+    context.browser.get('http://example.com/resource-list')
+    context.browser.find_element_by_link_text('New Resource').click()
+    context.browser.find_element_by_id('edit').click()
+
+@when('I update the resource details')
+def step_impl(context):
+    context.browser.find_element_by_id('title').clear()
+    context.browser.find_element_by_id('title').send_keys('Updated Resource')
+    context.browser.find_element_by_id('description').clear()
+    context.browser.find_element_by_id('description').send_keys('Updated Description')
+
+@then('the updated resource should be listed in the resource list')
+def step_impl(context):
+    context.browser.get('http://example.com/resource-list')
+    assert 'Updated Resource' in context.browser.page_source
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the user can log in as an Archivist.
+- [ ] Verify that the ""Create Resource"" page is accessible.
+- [ ] Verify that the resource details form can be filled out.
+- [ ] Verify that the form can be submitted.
+- [ ] Verify that a confirmation message is displayed after form submission.
+- [ ] Verify that the new resource appears in the resource list.
+- [ ] Verify that an existing resource record can be edited.
+- [ ] Verify that the ""Edit Resource"" page is accessible for an existing resource.
+- [ ] Verify that the resource details can be updated.
+- [ ] Verify that a confirmation message is displayed after updating the resource.
+- [ ] Verify that the updated resource appears in the resource list.",gpt-4o-2024-05-13,0.01295,None,2026-07-16 00:58:08
+US020,parabol_blog,Parabol: Backend,Complex,developer,to create a RESTful API so that our front end can communicate with our back end,our front end can communicate with our back end,Yes,1. GET /api/v1/users returns 200 OK and valid JSON. 2. POST /api/v1/users with missing payload returns 400 Bad Request. 3. Verify JWT token authentication works on all endpoints.,2,1,1.0,"This is an architectural task ('create a RESTful API'), not a user story. Both annotators heavily penalized it. Needs to be rewritten from frontend user perspective.","**(1) Gherkin scenarios in .feature format:**
+
+```gherkin
+Feature: RESTful API for Frontend and Backend Communication
+
+  Scenario: Successful GET request to retrieve data
+    Given the API is running
+    When the client sends a GET request to ""/data""
+    Then the server should respond with a 200 status code
+    And the response should contain the requested data
+
+  Scenario: Successful POST request to send data
+    Given the API is running
+    When the client sends a POST request to ""/data"" with valid data
+    Then the server should respond with a 201 status code
+    And the response should contain a confirmation message
+
+  Scenario: Unsuccessful GET request to a non-existent endpoint
+    Given the API is running
+    When the client sends a GET request to ""/nonexistent""
+    Then the server should respond with a 404 status code
+    And the response should contain an error message
+
+  Scenario: Unsuccessful POST request with invalid data
+    Given the API is running
+    When the client sends a POST request to ""/data"" with invalid data
+    Then the server should respond with a 400 status code
+    And the response should contain an error message
+```
+
+**(2) Step definitions in Python:**
+
+```python
+from behave import given, when, then
+import requests
+
+API_URL = ""http://localhost:5000""
+
+@given('the API is running')
+def step_impl(context):
+    response = requests.get(API_URL + ""/health"")
+    assert response.status_code == 200
+
+@when('the client sends a GET request to ""{endpoint}""')
+def step_impl(context, endpoint):
+    context.response = requests.get(API_URL + endpoint)
+
+@when('the client sends a POST request to ""{endpoint}"" with valid data')
+def step_impl(context, endpoint):
+    valid_data = {""key"": ""value""}
+    context.response = requests.post(API_URL + endpoint, json=valid_data)
+
+@when('the client sends a POST request to ""{endpoint}"" with invalid data')
+def step_impl(context, endpoint):
+    invalid_data = {""invalid"": ""data""}
+    context.response = requests.post(API_URL + endpoint, json=invalid_data)
+
+@then('the server should respond with a {status_code:d} status code')
+def step_impl(context, status_code):
+    assert context.response.status_code == status_code
+
+@then('the response should contain the requested data')
+def step_impl(context):
+    assert ""data"" in context.response.json()
+
+@then('the response should contain a confirmation message')
+def step_impl(context):
+    assert ""confirmation"" in context.response.json()
+
+@then('the response should contain an error message')
+def step_impl(context):
+    assert ""error"" in context.response.json()
+```
+
+**(3) Validation checklist:**
+
+- [ ] Verify the API server is running and accessible.
+- [ ] Validate the GET request to ""/data"" returns a 200 status code and contains the requested data.
+- [ ] Validate the POST request to ""/data"" with valid data returns a 201 status code and contains a confirmation message.
+- [ ] Validate the GET request to a non-existent endpoint ""/nonexistent"" returns a 404 status code and contains an error message.
+- [ ] Validate the POST request to ""/data"" with invalid data returns a 400 status code and contains an error message.
+- [ ] Ensure the health check endpoint ""/health"" returns a 200 status code.",gpt-4o-2024-05-13,0.01117,None,2026-07-16 00:58:11
+US021,parabol_blog,Parabol: Online Shopping,Medium,customer,"to track my order, so I can know when to expect delivery",I can know when to expect delivery,Yes,"1. Enter order #12345, see timeline UI (Ordered -> Shipped -> Delivered). 2. Enter non-existent order #999, see 'Order not found' graphic. 3. Display estimated delivery date.",3,2,2.0,"Standard e-commerce story. 'Track my order' is clear. Acceptance criteria would need to define what statuses exist (Shipped, Transit, etc).","(1) Gherkin scenarios in .feature format:
+
+```gherkin
+Feature: Order Tracking
+
+  Scenario: Customer views order tracking page
+    Given the customer is logged in
+    When the customer navigates to the order tracking page
+    Then the customer should see a list of their orders
+
+  Scenario: Customer views order status
+    Given the customer is on the order tracking page
+    When the customer selects an order
+    Then the customer should see the current status of the order
+
+  Scenario: Customer views estimated delivery date
+    Given the customer is viewing the order status
+    Then the customer should see the estimated delivery date
+```
+
+(2) Step definitions in Python:
+
+```python
+from behave import given, when, then
+
+@given('the customer is logged in')
+def step_impl(context):
+    context.browser.get('http://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('customer')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('the customer navigates to the order tracking page')
+def step_impl(context):
+    context.browser.get('http://example.com/order-tracking')
+
+@then('the customer should see a list of their orders')
+def step_impl(context):
+    orders = context.browser.find_elements_by_class_name('order')
+    assert len(orders) > 0
+
+@when('the customer selects an order')
+def step_impl(context):
+    context.browser.find_element_by_class_name('order').click()
+
+@then('the customer should see the current status of the order')
+def step_impl(context):
+    status = context.browser.find_element_by_id('order-status').text
+    assert status is not None
+
+@then('the customer should see the estimated delivery date')
+def step_impl(context):
+    delivery_date = context.browser.find_element_by_id('delivery-date').text
+    assert delivery_date is not None
+```
+
+(3) Validation checklist:
+
+- [ ] Verify the customer can log in successfully.
+- [ ] Verify the customer can navigate to the order tracking page.
+- [ ] Verify the order tracking page displays a list of orders.
+- [ ] Verify the customer can select an order from the list.
+- [ ] Verify the order status is displayed when an order is selected.
+- [ ] Verify the estimated delivery date is displayed along with the order status.",gpt-4o-2024-05-13,0.0079,None,2026-07-16 00:58:13
+US022,parabol_blog,Parabol: With Requirements,Medium,banking customer,"to transfer funds between my accounts, so I can manage my money effectively",I can manage my money effectively,Yes,"1. Transfer $50 from Checking to Savings, verify balances instantly update. 2. Attempt to transfer more than available balance (expect error). 3. Verify transaction appears in history.",3,3,3.0,Banking domain. Role is just 'user' (implicit). Story is fine but basic. A2 wanted more specifics on 'effectively' managing money.,"### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Transfer funds between accounts
+
+  Scenario: Successful transfer of funds between accounts
+    Given I am logged into my banking account
+    And I have sufficient funds in my source account
+    When I transfer $100 from my source account to my destination account
+    Then the transfer should be successful
+    And the source account balance should be reduced by $100
+    And the destination account balance should be increased by $100
+
+  Scenario: Transfer funds with insufficient balance
+    Given I am logged into my banking account
+    And I have insufficient funds in my source account
+    When I attempt to transfer $1000 from my source account to my destination account
+    Then the transfer should be declined
+    And I should see an error message ""Insufficient funds""
+    And the source account balance should remain unchanged
+    And the destination account balance should remain unchanged
+
+  Scenario: Transfer funds between the same account
+    Given I am logged into my banking account
+    When I attempt to transfer $100 from my account to the same account
+    Then the transfer should be declined
+    And I should see an error message ""Cannot transfer to the same account""
+    And the account balance should remain unchanged
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged into my banking account')
+def step_impl(context):
+    context.user = login_to_banking_account()
+
+@given('I have sufficient funds in my source account')
+def step_impl(context):
+    context.source_account = get_account_balance()
+    assert context.source_account.balance >= 100
+
+@given('I have insufficient funds in my source account')
+def step_impl(context):
+    context.source_account = get_account_balance()
+    assert context.source_account.balance < 1000
+
+@when('I transfer ${amount:d} from my source account to my destination account')
+def step_impl(context, amount):
+    context.result = transfer_funds(context.source_account, context.destination_account, amount)
+
+@when('I attempt to transfer ${amount:d} from my source account to my destination account')
+def step_impl(context, amount):
+    context.result = transfer_funds(context.source_account, context.destination_account, amount)
+
+@when('I attempt to transfer ${amount:d} from my account to the same account')
+def step_impl(context, amount):
+    context.result = transfer_funds(context.source_account, context.source_account, amount)
+
+@then('the transfer should be successful')
+def step_impl(context):
+    assert context.result['status'] == 'success'
+
+@then('the transfer should be declined')
+def step_impl(context):
+    assert context.result['status'] == 'declined'
+
+@then('I should see an error message ""{message}""')
+def step_impl(context, message):
+    assert context.result['error_message'] == message
+
+@then('the source account balance should be reduced by ${amount:d}')
+def step_impl(context, amount):
+    new_balance = get_account_balance(context.source_account)
+    assert new_balance == context.source_account.balance - amount
+
+@then('the destination account balance should be increased by ${amount:d}')
+def step_impl(context, amount):
+    new_balance = get_account_balance(context.destination_account)
+    assert new_balance == context.destination_account.balance + amount
+
+@then('the source account balance should remain unchanged')
+def step_impl(context):
+    new_balance = get_account_balance(context.source_account)
+    assert new_balance == context.source_account.balance
+
+@then('the destination account balance should remain unchanged')
+def step_impl(context):
+    new_balance = get_account_balance(context.destination_account)
+    assert new_balance == context.destination_account.balance
+
+@then('the account balance should remain unchanged')
+def step_impl(context):
+    new_balance = get_account_balance(context.source_account)
+    assert new_balance == context.source_account.balance
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify user is logged into the banking account.
+- [ ] Verify source account has sufficient funds for the transfer.
+- [ ] Verify source account has insufficient funds for the transfer.
+- [ ] Verify transfer of $100 from source account to destination account is successful.
+- [ ] Verify source account balance is reduced by $100 after successful transfer.
+- [ ] Verify destination account balance is increased by $100 after successful transfer.
+- [ ] Verify transfer is declined when source account has insufficient funds.
+- [ ] Verify error message ""Insufficient funds"" is displayed when transfer is declined.
+- [ ] Verify source account balance remains unchanged when transfer is declined.
+- [ ] Verify destination account balance remains unchanged when transfer is declined.
+- [ ] Verify transfer is declined when attempting to transfer funds to the same account.
+- [ ] Verify error message ""Cannot transfer to the same account"" is displayed when transfer is declined.
+- [ ] Verify account balance remains unchanged when transfer to the same account is declined.",gpt-4o-2024-05-13,0.0156,None,2026-07-16 00:58:17
+US023,parabol_blog,Parabol: Registration,Simple,new user,to choose my own username and password during registration,I can personalize my login credentials,Yes,1. Register with username 'JohnDoe' and strong password. 2. Attempt to register 'JohnDoe' again (expect duplicate error). 3. Check password strength meter turns green.,4,4,4.0,Good registration story. Disagreement because A1 felt 'personalize login' is a weak benefit statement compared to actual security needs.,"**(1) Gherkin scenarios in .feature format:**
+
+```gherkin
+Feature: User Registration
+
+  Scenario: Successful registration with valid username and password
+    Given I am a new user on the registration page
+    When I enter a valid username
+    And I enter a valid password
+    And I confirm the password
+    And I submit the registration form
+    Then I should see a registration success message
+
+  Scenario: Registration with an already taken username
+    Given I am a new user on the registration page
+    When I enter a username that is already taken
+    And I enter a valid password
+    And I confirm the password
+    And I submit the registration form
+    Then I should see an error message indicating the username is already taken
+
+  Scenario: Registration with mismatched password confirmation
+    Given I am a new user on the registration page
+    When I enter a valid username
+    And I enter a valid password
+    And I enter a different password in the confirmation field
+    And I submit the registration form
+    Then I should see an error message indicating the passwords do not match
+
+  Scenario: Registration with invalid username
+    Given I am a new user on the registration page
+    When I enter an invalid username
+    And I enter a valid password
+    And I confirm the password
+    And I submit the registration form
+    Then I should see an error message indicating the username is invalid
+
+  Scenario: Registration with invalid password
+    Given I am a new user on the registration page
+    When I enter a valid username
+    And I enter an invalid password
+    And I confirm the password
+    And I submit the registration form
+    Then I should see an error message indicating the password is invalid
+```
+
+**(2) Step definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a new user on the registration page')
+def step_impl(context):
+    context.browser.get('http://example.com/register')
+
+@when('I enter a valid username')
+def step_impl(context):
+    context.browser.find_element_by_id('username').send_keys('validUsername')
+
+@when('I enter a valid password')
+def step_impl(context):
+    context.browser.find_element_by_id('password').send_keys('ValidPassword123')
+
+@when('I confirm the password')
+def step_impl(context):
+    context.browser.find_element_by_id('confirm_password').send_keys('ValidPassword123')
+
+@when('I submit the registration form')
+def step_impl(context):
+    context.browser.find_element_by_id('submit').click()
+
+@then('I should see a registration success message')
+def step_impl(context):
+    success_message = context.browser.find_element_by_id('success_message').text
+    assert success_message == 'Registration successful!'
+
+@when('I enter a username that is already taken')
+def step_impl(context):
+    context.browser.find_element_by_id('username').send_keys('takenUsername')
+
+@then('I should see an error message indicating the username is already taken')
+def step_impl(context):
+    error_message = context.browser.find_element_by_id('error_message').text
+    assert error_message == 'Username is already taken'
+
+@when('I enter a different password in the confirmation field')
+def step_impl(context):
+    context.browser.find_element_by_id('confirm_password').send_keys('DifferentPassword123')
+
+@then('I should see an error message indicating the passwords do not match')
+def step_impl(context):
+    error_message = context.browser.find_element_by_id('error_message').text
+    assert error_message == 'Passwords do not match'
+
+@when('I enter an invalid username')
+def step_impl(context):
+    context.browser.find_element_by_id('username').send_keys('invalid username!')
+
+@then('I should see an error message indicating the username is invalid')
+def step_impl(context):
+    error_message = context.browser.find_element_by_id('error_message').text
+    assert error_message == 'Invalid username'
+
+@when('I enter an invalid password')
+def step_impl(context):
+    context.browser.find_element_by_id('password').send_keys('short')
+
+@then('I should see an error message indicating the password is invalid')
+def step_impl(context):
+    error_message = context.browser.find_element_by_id('error_message').text
+    assert error_message == 'Invalid password'
+```
+
+**(3) Validation checklist:**
+
+- [ ] Verify that the registration page loads correctly.
+- [ ] Verify that a new user can enter a valid username.
+- [ ] Verify that a new user can enter a valid password.
+- [ ] Verify that a new user can confirm the password.
+- [ ] Verify that the registration form can be submitted.
+- [ ] Verify that a success message is displayed upon successful registration.
+- [ ] Verify that an error message is displayed when the username is already taken.
+- [ ] Verify that an error message is displayed when the passwords do not match.
+- [ ] Verify that an error message is displayed when an invalid username is entered.
+- [ ] Verify that an error message is displayed when an invalid password is entered.",gpt-4o-2024-05-13,0.016145,None,2026-07-16 00:58:20
+US024,parabol_blog,Parabol: Technical Debt,Complex,developer,to refactor our legacy code so that it's easier to maintain and extend,it's easier to maintain and extend,Yes,1. Run unit test suite post-refactor; expect 100% pass rate. 2. Run SonarQube; verify cyclomatic complexity reduced by 10%. 3. Smoke test core UI to ensure no regressions.,2,2,2.0,'Refactor our legacy code' - classic anti-pattern for user stories. This is a technical chore. Both annotators correctly scored this low.,"### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Refactor legacy code for maintainability and extensibility
+
+  Scenario: Refactor a legacy function
+    Given the legacy function ""calculateTotal"" exists
+    When I refactor the function to improve readability
+    Then the function should produce the same output as before
+    And the code should be easier to understand
+
+  Scenario: Extract a method from a large class
+    Given the class ""OrderProcessor"" has a large method ""processOrder""
+    When I extract the method ""validateOrder"" from ""processOrder""
+    Then the ""OrderProcessor"" class should be easier to maintain
+    And the ""validateOrder"" method should be reusable
+
+  Scenario: Replace a deprecated library
+    Given the project uses the deprecated library ""OldLib""
+    When I replace ""OldLib"" with ""NewLib""
+    Then the project should compile without errors
+    And all tests should pass
+
+  Scenario: Improve code documentation
+    Given the legacy code has poor documentation
+    When I add comments and documentation
+    Then the code should be easier to understand
+    And new developers should be able to onboard faster
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('the legacy function ""{function_name}"" exists')
+def step_given_legacy_function_exists(context, function_name):
+    context.function_name = function_name
+    # Code to check if the function exists
+
+@when('I refactor the function to improve readability')
+def step_when_refactor_function(context):
+    # Code to refactor the function
+
+@then('the function should produce the same output as before')
+def step_then_function_same_output(context):
+    # Code to verify the function produces the same output
+
+@then('the code should be easier to understand')
+def step_then_code_easier_to_understand(context):
+    # Code to verify the code is easier to understand
+
+@given('the class ""{class_name}"" has a large method ""{method_name}""')
+def step_given_class_has_large_method(context, class_name, method_name):
+    context.class_name = class_name
+    context.method_name = method_name
+    # Code to check if the class and method exist
+
+@when('I extract the method ""{new_method_name}"" from ""{method_name}""')
+def step_when_extract_method(context, new_method_name, method_name):
+    # Code to extract the method
+
+@then('the ""{class_name}"" class should be easier to maintain')
+def step_then_class_easier_to_maintain(context, class_name):
+    # Code to verify the class is easier to maintain
+
+@then('the ""{new_method_name}"" method should be reusable')
+def step_then_method_reusable(context, new_method_name):
+    # Code to verify the method is reusable
+
+@given('the project uses the deprecated library ""{library_name}""')
+def step_given_project_uses_deprecated_library(context, library_name):
+    context.library_name = library_name
+    # Code to check if the project uses the deprecated library
+
+@when('I replace ""{old_library}"" with ""{new_library}""')
+def step_when_replace_library(context, old_library, new_library):
+    # Code to replace the library
+
+@then('the project should compile without errors')
+def step_then_project_compile_without_errors(context):
+    # Code to verify the project compiles without errors
+
+@then('all tests should pass')
+def step_then_all_tests_pass(context):
+    # Code to verify all tests pass
+
+@given('the legacy code has poor documentation')
+def step_given_legacy_code_poor_documentation(context):
+    # Code to check the documentation quality
+
+@when('I add comments and documentation')
+def step_when_add_comments_documentation(context):
+    # Code to add comments and documentation
+
+@then('the code should be easier to understand')
+def step_then_code_easier_to_understand(context):
+    # Code to verify the code is easier to understand
+
+@then('new developers should be able to onboard faster')
+def step_then_new_developers_onboard_faster(context):
+    # Code to verify new developers can onboard faster
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the existence of the legacy function ""calculateTotal"".
+- [ ] Ensure the refactored function produces the same output as before.
+- [ ] Confirm the refactored function is easier to understand.
+- [ ] Check the existence of the class ""OrderProcessor"" and its method ""processOrder"".
+- [ ] Validate the extraction of the ""validateOrder"" method from ""processOrder"".
+- [ ] Ensure the ""OrderProcessor"" class is easier to maintain after extraction.
+- [ ] Confirm the ""validateOrder"" method is reusable.
+- [ ] Verify the project uses the deprecated library ""OldLib"".
+- [ ] Ensure ""OldLib"" is replaced with ""NewLib"".
+- [ ] Confirm the project compiles without errors after the library replacement.
+- [ ] Ensure all tests pass after the library replacement.
+- [ ] Check the quality of the existing documentation in the legacy code.
+- [ ] Validate the addition of comments and documentation.
+- [ ] Confirm the code is easier to understand after adding documentation.
+- [ ] Ensure new developers can onboard faster with the improved documentation.",gpt-4o-2024-05-13,0.01678,None,2026-07-16 00:58:24
+US025,g12-camperplus.txt,Camping / Recreation,Simple,camp administrator,to be quickly log attendance everyday,I can track which kids are coming in,Yes,"1. Open class list, tap 'Present All'. 2. Manually toggle one student to 'Absent'. 3. Submit day's attendance and verify database timestamp.",4,4,4.0,Educational/School domain. 'Quickly log attendance'. Typo in original ('to be quickly log'). Annotators agreed it's understandable but poorly phrased.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Log attendance
+  As a camp administrator
+  I want to quickly log attendance every day
+  So that I can track which kids are coming in
+
+  Scenario: Log attendance for a single child
+    Given I am logged in as a camp administrator
+    And I am on the attendance logging page
+    When I select a child from the list
+    And I mark the child as present
+    Then the child's attendance should be logged for the day
+
+  Scenario: Log attendance for multiple children
+    Given I am logged in as a camp administrator
+    And I am on the attendance logging page
+    When I select multiple children from the list
+    And I mark them as present
+    Then the attendance for all selected children should be logged for the day
+
+  Scenario: View attendance log
+    Given I am logged in as a camp administrator
+    And I am on the attendance logging page
+    When I view the attendance log for the day
+    Then I should see a list of all children marked as present
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a camp administrator')
+def step_impl(context):
+    context.browser.visit_login_page()
+    context.browser.login_as_admin()
+
+@given('I am on the attendance logging page')
+def step_impl(context):
+    context.browser.visit_attendance_page()
+
+@when('I select a child from the list')
+def step_impl(context):
+    context.browser.select_child_from_list()
+
+@when('I mark the child as present')
+def step_impl(context):
+    context.browser.mark_child_as_present()
+
+@then('the child\'s attendance should be logged for the day')
+def step_impl(context):
+    assert context.browser.is_attendance_logged_for_child()
+
+@when('I select multiple children from the list')
+def step_impl(context):
+    context.browser.select_multiple_children_from_list()
+
+@when('I mark them as present')
+def step_impl(context):
+    context.browser.mark_children_as_present()
+
+@then('the attendance for all selected children should be logged for the day')
+def step_impl(context):
+    assert context.browser.is_attendance_logged_for_all_selected_children()
+
+@when('I view the attendance log for the day')
+def step_impl(context):
+    context.browser.view_attendance_log()
+
+@then('I should see a list of all children marked as present')
+def step_impl(context):
+    assert context.browser.is_attendance_log_correct()
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the camp administrator can log in successfully.
+- [ ] Verify that the camp administrator can navigate to the attendance logging page.
+- [ ] Verify that a single child can be selected from the list.
+- [ ] Verify that a single child's attendance can be marked as present.
+- [ ] Verify that the attendance for a single child is logged correctly.
+- [ ] Verify that multiple children can be selected from the list.
+- [ ] Verify that multiple children's attendance can be marked as present.
+- [ ] Verify that the attendance for multiple children is logged correctly.
+- [ ] Verify that the camp administrator can view the attendance log for the day.
+- [ ] Verify that the attendance log displays all children marked as present.",gpt-4o-2024-05-13,0.010635,None,2026-07-16 00:58:27
+US026,g28-zooniverse.txt,Citizen Science / Media Platform,Simple,Zooniverse admin,to know when Zoonibot should comment on a subject,Benefit not explicitly stated.,Yes,1. Trigger specific workflow rule; verify Zoonibot posts comment within 2 seconds. 2. Check Zoonibot comment contains correct markdown formatting.,3,3,3.0,Zoonibot story. Lacks benefit. 'To know when Zoonibot should comment' is vague. Score reflects the ambiguity of the trigger conditions.,"**(1) Gherkin scenarios in .feature format:**
+
+```gherkin
+Feature: Zoonibot Commenting on Subjects
+
+  Scenario: Zoonibot comments on a subject when criteria are met
+    Given I am a Zooniverse admin
+    When the criteria for Zoonibot to comment on a subject are met
+    Then Zoonibot should comment on the subject
+
+  Scenario: Zoonibot does not comment on a subject when criteria are not met
+    Given I am a Zooniverse admin
+    When the criteria for Zoonibot to comment on a subject are not met
+    Then Zoonibot should not comment on the subject
+```
+
+**(2) Step definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a Zooniverse admin')
+def step_given_i_am_a_zooniverse_admin(context):
+    context.admin = True
+
+@when('the criteria for Zoonibot to comment on a subject are met')
+def step_when_criteria_are_met(context):
+    context.criteria_met = True
+
+@when('the criteria for Zoonibot to comment on a subject are not met')
+def step_when_criteria_are_not_met(context):
+    context.criteria_met = False
+
+@then('Zoonibot should comment on the subject')
+def step_then_zoonibot_should_comment(context):
+    assert context.criteria_met is True
+    context.zoonibot_commented = True
+
+@then('Zoonibot should not comment on the subject')
+def step_then_zoonibot_should_not_comment(context):
+    assert context.criteria_met is False
+    context.zoonibot_commented = False
+```
+
+**(3) Validation checklist:**
+
+- [ ] Verify that the user is identified as a Zooniverse admin.
+- [ ] Verify the criteria for Zoonibot to comment on a subject are defined.
+- [ ] Verify Zoonibot comments on the subject when criteria are met.
+- [ ] Verify Zoonibot does not comment on the subject when criteria are not met.
+- [ ] Verify the system logs the action of Zoonibot commenting.
+- [ ] Verify the system logs the action of Zoonibot not commenting.
+- [ ] Verify the admin receives a notification when Zoonibot comments.
+- [ ] Verify the admin receives a notification when Zoonibot does not comment.",gpt-4o-2024-05-13,0.008125,None,2026-07-16 00:58:30
+US027,g13-planningpoker.txt,Agile Estimation Tooling,Simple,moderator,to change my account details,I can keep my account details up-to-date,Yes,"1. Navigate to Settings, change phone number. 2. Verify OTP is sent to new phone. 3. Old phone number cannot be used to log in.",4,4,4.0,CRUD operation. Benefit is a bit tautological ('keep details up-to-date'). Needs more specific value proposition for the user.,"### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Change account details
+  As a moderator
+  I want to change my account details
+  So that I can keep my account details up-to-date
+
+  Scenario: Successfully change account details
+    Given I am logged in as a moderator
+    When I navigate to the account settings page
+    And I update my account details
+    And I submit the changes
+    Then I should see a confirmation message
+    And my account details should be updated
+
+  Scenario: Fail to change account details due to invalid input
+    Given I am logged in as a moderator
+    When I navigate to the account settings page
+    And I enter invalid account details
+    And I submit the changes
+    Then I should see an error message
+    And my account details should not be updated
+
+  Scenario: Fail to change account details due to missing required fields
+    Given I am logged in as a moderator
+    When I navigate to the account settings page
+    And I leave required fields empty
+    And I submit the changes
+    Then I should see an error message
+    And my account details should not be updated
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('I am logged in as a moderator')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+    context.browser.get('http://example.com/login')
+    context.browser.find_element_by_id('username').send_keys('moderator')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login').click()
+
+@when('I navigate to the account settings page')
+def step_impl(context):
+    context.browser.find_element_by_id('account_settings').click()
+
+@when('I update my account details')
+def step_impl(context):
+    context.browser.find_element_by_id('name').clear()
+    context.browser.find_element_by_id('name').send_keys('New Name')
+    context.browser.find_element_by_id('email').clear()
+    context.browser.find_element_by_id('email').send_keys('newemail@example.com')
+
+@when('I enter invalid account details')
+def step_impl(context):
+    context.browser.find_element_by_id('email').clear()
+    context.browser.find_element_by_id('email').send_keys('invalid-email')
+
+@when('I leave required fields empty')
+def step_impl(context):
+    context.browser.find_element_by_id('name').clear()
+    context.browser.find_element_by_id('email').clear()
+
+@when('I submit the changes')
+def step_impl(context):
+    context.browser.find_element_by_id('submit').click()
+
+@then('I should see a confirmation message')
+def step_impl(context):
+    assert ""Changes saved successfully"" in context.browser.page_source
+
+@then('my account details should be updated')
+def step_impl(context):
+    context.browser.refresh()
+    name = context.browser.find_element_by_id('name').get_attribute('value')
+    email = context.browser.find_element_by_id('email').get_attribute('value')
+    assert name == 'New Name'
+    assert email == 'newemail@example.com'
+
+@then('I should see an error message')
+def step_impl(context):
+    assert ""Error"" in context.browser.page_source
+
+@then('my account details should not be updated')
+def step_impl(context):
+    context.browser.refresh()
+    name = context.browser.find_element_by_id('name').get_attribute('value')
+    email = context.browser.find_element_by_id('email').get_attribute('value')
+    assert name != 'New Name'
+    assert email != 'newemail@example.com'
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the moderator can log in successfully.
+- [ ] Verify that the moderator can navigate to the account settings page.
+- [ ] Verify that the moderator can update account details with valid input.
+- [ ] Verify that a confirmation message is displayed after successful update.
+- [ ] Verify that the account details are updated in the system.
+- [ ] Verify that an error message is displayed when invalid account details are entered.
+- [ ] Verify that the account details are not updated when invalid input is provided.
+- [ ] Verify that an error message is displayed when required fields are left empty.
+- [ ] Verify that the account details are not updated when required fields are left empty.",gpt-4o-2024-05-13,0.014034999999999999,None,2026-07-16 00:58:34
+US028,parabol_blog,Parabol: Dashboards,Medium,frequent customer,to see product recommendations on my dashboard,I can discover new products I might like,Yes,"1. View dashboard as returning user; see 5 recommended items based on cart history. 2. View as new user; see 'Trending Now' default items. 3. Click recommendation, verify it opens product page.",4,4,4.0,Clear e-commerce recommendation story. Both agreed on high score. Suggestion: specify if recommendations are based on past purchases or browsing.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Product Recommendations on Dashboard
+
+  Scenario: Display product recommendations for a frequent customer
+    Given I am a frequent customer
+    When I visit my dashboard
+    Then I should see product recommendations
+
+  Scenario: Product recommendations are relevant to the customer
+    Given I am a frequent customer
+    When I visit my dashboard
+    Then the product recommendations should be relevant to my interests
+
+  Scenario: No product recommendations for a new customer
+    Given I am a new customer
+    When I visit my dashboard
+    Then I should not see any product recommendations
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a frequent customer')
+def step_given_frequent_customer(context):
+    context.customer_type = 'frequent'
+
+@given('I am a new customer')
+def step_given_new_customer(context):
+    context.customer_type = 'new'
+
+@when('I visit my dashboard')
+def step_when_visit_dashboard(context):
+    context.dashboard = visit_dashboard(context.customer_type)
+
+@then('I should see product recommendations')
+def step_then_see_recommendations(context):
+    assert 'recommendations' in context.dashboard
+
+@then('the product recommendations should be relevant to my interests')
+def step_then_recommendations_relevant(context):
+    assert are_recommendations_relevant(context.dashboard['recommendations'], context.customer_type)
+
+@then('I should not see any product recommendations')
+def step_then_no_recommendations(context):
+    assert 'recommendations' not in context.dashboard
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that frequent customers are identified correctly.
+- [ ] Verify that the dashboard is accessible to frequent customers.
+- [ ] Verify that product recommendations are displayed on the dashboard for frequent customers.
+- [ ] Verify that product recommendations are relevant to the interests of frequent customers.
+- [ ] Verify that new customers are identified correctly.
+- [ ] Verify that the dashboard is accessible to new customers.
+- [ ] Verify that no product recommendations are displayed on the dashboard for new customers.",gpt-4o-2024-05-13,0.007039999999999999,None,2026-07-16 00:58:36
+US029,parabol_blog,Parabol: With Acceptance Criteria,Medium,restaurant customer,"to reserve a table online, so I can ensure I have a place to eat at my preferred time",I can ensure I have a place to eat at my preferred time,Yes,"1. Pick June 15, 7 PM, Party of 4; verify booking confirmed. 2. Pick fully booked time; verify slot is disabled in UI. 3. Receive email confirmation.",3,3,3.0,Restaurant booking. Well structured with 'so I can'. Disagreement from A2 who wanted to know if 'preferred time' implies a calendar view UI.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Table Reservation
+
+  Scenario: Successful table reservation
+    Given I am on the restaurant's reservation page
+    When I select the date ""2023-10-15""
+    And I select the time ""19:00""
+    And I select the number of guests ""4""
+    And I enter my name ""John Doe""
+    And I enter my contact information ""john.doe@example.com""
+    And I click on the ""Reserve"" button
+    Then I should see a confirmation message ""Your table has been reserved""
+
+  Scenario: Reservation with missing information
+    Given I am on the restaurant's reservation page
+    When I select the date ""2023-10-15""
+    And I select the time ""19:00""
+    And I select the number of guests ""4""
+    And I enter my name """"
+    And I enter my contact information ""john.doe@example.com""
+    And I click on the ""Reserve"" button
+    Then I should see an error message ""Name is required""
+
+  Scenario: Reservation for a fully booked time slot
+    Given I am on the restaurant's reservation page
+    When I select the date ""2023-10-15""
+    And I select the time ""19:00""
+    And I select the number of guests ""4""
+    And I enter my name ""John Doe""
+    And I enter my contact information ""john.doe@example.com""
+    And I click on the ""Reserve"" button
+    Then I should see an error message ""The selected time slot is fully booked""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am on the restaurant\'s reservation page')
+def step_impl(context):
+    context.browser.get('http://restaurant-reservation-page.com')
+
+@when('I select the date ""{date}""')
+def step_impl(context, date):
+    date_field = context.browser.find_element_by_id('reservation_date')
+    date_field.send_keys(date)
+
+@when('I select the time ""{time}""')
+def step_impl(context, time):
+    time_field = context.browser.find_element_by_id('reservation_time')
+    time_field.send_keys(time)
+
+@when('I select the number of guests ""{guests}""')
+def step_impl(context, guests):
+    guests_field = context.browser.find_element_by_id('reservation_guests')
+    guests_field.send_keys(guests)
+
+@when('I enter my name ""{name}""')
+def step_impl(context, name):
+    name_field = context.browser.find_element_by_id('reservation_name')
+    name_field.send_keys(name)
+
+@when('I enter my contact information ""{contact}""')
+def step_impl(context, contact):
+    contact_field = context.browser.find_element_by_id('reservation_contact')
+    contact_field.send_keys(contact)
+
+@when('I click on the ""Reserve"" button')
+def step_impl(context):
+    reserve_button = context.browser.find_element_by_id('reserve_button')
+    reserve_button.click()
+
+@then('I should see a confirmation message ""{message}""')
+def step_impl(context, message):
+    confirmation_message = context.browser.find_element_by_id('confirmation_message')
+    assert confirmation_message.text == message
+
+@then('I should see an error message ""{message}""')
+def step_impl(context, message):
+    error_message = context.browser.find_element_by_id('error_message')
+    assert error_message.text == message
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the reservation page URL is correct.
+- [ ] Verify the date field accepts valid dates.
+- [ ] Verify the time field accepts valid times.
+- [ ] Verify the number of guests field accepts valid numbers.
+- [ ] Verify the name field accepts valid names.
+- [ ] Verify the contact information field accepts valid email addresses.
+- [ ] Verify the ""Reserve"" button is clickable.
+- [ ] Verify a confirmation message is displayed upon successful reservation.
+- [ ] Verify an error message is displayed when the name field is empty.
+- [ ] Verify an error message is displayed when the selected time slot is fully booked.
+- [ ] Verify the error and confirmation messages are accurate and user-friendly.",gpt-4o-2024-05-13,0.01355,None,2026-07-16 00:58:39
+US030,g16-mis.txt,Management Information System,Simple,faculty member,to add a date delimiter to a search string,"I can limit a search to return only results from before, after, or between a given date or dates",Yes,"1. Search with delimiter 'after:2025-01-01'; verify no 2024 results. 2. Search 'between:2025-01-01,2025-12-31'; check boundaries. 3. Input malformed date '2025-13-45'; see format error.",4,4,4.0,"Search feature. Benefit is highly specific and clear. Annotators loved the detail on 'before, after, or between'. Scored very well.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Add date delimiter to search string
+
+  Scenario: Add a date delimiter to search string for results before a given date
+    Given I am a faculty member
+    When I add a date delimiter ""before"" with the date ""2023-12-31"" to the search string
+    Then the search string should be updated to include ""before 2023-12-31""
+
+  Scenario: Add a date delimiter to search string for results after a given date
+    Given I am a faculty member
+    When I add a date delimiter ""after"" with the date ""2023-01-01"" to the search string
+    Then the search string should be updated to include ""after 2023-01-01""
+
+  Scenario: Add a date delimiter to search string for results between two dates
+    Given I am a faculty member
+    When I add a date delimiter ""between"" with the dates ""2023-01-01"" and ""2023-12-31"" to the search string
+    Then the search string should be updated to include ""between 2023-01-01 and 2023-12-31""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a faculty member')
+def step_impl(context):
+    context.user_role = 'faculty member'
+
+@when('I add a date delimiter ""{delimiter}"" with the date ""{date}"" to the search string')
+def step_impl(context, delimiter, date):
+    context.search_string = f""{delimiter} {date}""
+
+@when('I add a date delimiter ""{delimiter}"" with the dates ""{start_date}"" and ""{end_date}"" to the search string')
+def step_impl(context, delimiter, start_date, end_date):
+    context.search_string = f""{delimiter} {start_date} and {end_date}""
+
+@then('the search string should be updated to include ""{expected_string}""')
+def step_impl(context, expected_string):
+    assert context.search_string == expected_string
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is identified as a faculty member.
+- [ ] Verify that the date delimiter ""before"" with a given date is correctly added to the search string.
+- [ ] Verify that the date delimiter ""after"" with a given date is correctly added to the search string.
+- [ ] Verify that the date delimiter ""between"" with two given dates is correctly added to the search string.
+- [ ] Verify that the search string is updated to include the correct date delimiter and date(s).
+- [ ] Verify that the search string format is consistent with the expected output.
+- [ ] Verify that invalid date formats are handled appropriately.
+- [ ] Verify that the system does not allow non-faculty members to add date delimiters to the search string.",gpt-4o-2024-05-13,0.009575,None,2026-07-16 00:58:41
+US031,parabol_blog,Parabol: Jira / CI-CD,Medium,product owner,to create custom workflows in Jira so that our process accurately reflects in the tool,our process accurately reflects in the tool,Yes,"1. Create custom transition 'To QA Review'. 2. Set condition 'Only QA Lead can transition'. 3. Test as Dev (fails), test as QA Lead (succeeds).",3,3,3.0,"Jira workflow customization. A1 flagged that 'accurately reflects in the tool' is a bit subjective, leading to a minor disagreement.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Custom Workflows in Jira
+
+  Scenario: Create a new custom workflow
+    Given I am logged into Jira as a product owner
+    When I navigate to the ""Workflows"" section in the Jira administration
+    And I click on the ""Add Workflow"" button
+    And I enter the name ""Custom Workflow"" and description ""Workflow for custom process""
+    And I add the necessary statuses and transitions
+    And I save the workflow
+    Then I should see the ""Custom Workflow"" in the list of workflows
+
+  Scenario: Edit an existing custom workflow
+    Given I am logged into Jira as a product owner
+    And a custom workflow named ""Custom Workflow"" exists
+    When I navigate to the ""Workflows"" section in the Jira administration
+    And I click on the ""Custom Workflow"" to edit it
+    And I add a new status ""Review"" and transition ""To Review""
+    And I save the workflow
+    Then I should see the updated ""Custom Workflow"" with the new status and transition
+
+  Scenario: Delete a custom workflow
+    Given I am logged into Jira as a product owner
+    And a custom workflow named ""Custom Workflow"" exists
+    When I navigate to the ""Workflows"" section in the Jira administration
+    And I click on the ""Custom Workflow"" to delete it
+    And I confirm the deletion
+    Then I should not see the ""Custom Workflow"" in the list of workflows
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('I am logged into Jira as a product owner')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+    context.browser.get('https://jira.example.com')
+    context.browser.find_element_by_id('login').send_keys('product_owner')
+    context.browser.find_element_by_id('password').send_keys('password')
+    context.browser.find_element_by_id('login-submit').click()
+
+@when('I navigate to the ""Workflows"" section in the Jira administration')
+def step_impl(context):
+    context.browser.find_element_by_id('admin_menu').click()
+    context.browser.find_element_by_link_text('Workflows').click()
+
+@when('I click on the ""Add Workflow"" button')
+def step_impl(context):
+    context.browser.find_element_by_id('add_workflow').click()
+
+@when('I enter the name ""Custom Workflow"" and description ""Workflow for custom process""')
+def step_impl(context):
+    context.browser.find_element_by_id('workflow_name').send_keys('Custom Workflow')
+    context.browser.find_element_by_id('workflow_description').send_keys('Workflow for custom process')
+
+@when('I add the necessary statuses and transitions')
+def step_impl(context):
+    # Add statuses and transitions logic here
+    pass
+
+@when('I save the workflow')
+def step_impl(context):
+    context.browser.find_element_by_id('save_workflow').click()
+
+@then('I should see the ""Custom Workflow"" in the list of workflows')
+def step_impl(context):
+    workflows = context.browser.find_elements_by_class_name('workflow_name')
+    assert any(workflow.text == 'Custom Workflow' for workflow in workflows)
+
+@given('a custom workflow named ""Custom Workflow"" exists')
+def step_impl(context):
+    # Ensure the custom workflow exists
+    pass
+
+@when('I click on the ""Custom Workflow"" to edit it')
+def step_impl(context):
+    context.browser.find_element_by_link_text('Custom Workflow').click()
+
+@when('I add a new status ""Review"" and transition ""To Review""')
+def step_impl(context):
+    # Add new status and transition logic here
+    pass
+
+@then('I should see the updated ""Custom Workflow"" with the new status and transition')
+def step_impl(context):
+    # Verify the updated workflow
+    pass
+
+@when('I click on the ""Custom Workflow"" to delete it')
+def step_impl(context):
+    context.browser.find_element_by_link_text('Custom Workflow').click()
+    context.browser.find_element_by_id('delete_workflow').click()
+
+@when('I confirm the deletion')
+def step_impl(context):
+    context.browser.find_element_by_id('confirm_delete').click()
+
+@then('I should not see the ""Custom Workflow"" in the list of workflows')
+def step_impl(context):
+    workflows = context.browser.find_elements_by_class_name('workflow_name')
+    assert not any(workflow.text == 'Custom Workflow' for workflow in workflows)
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify login as a product owner
+- [ ] Verify navigation to the ""Workflows"" section
+- [ ] Verify the ""Add Workflow"" button is clickable
+- [ ] Verify entering workflow name and description
+- [ ] Verify adding statuses and transitions
+- [ ] Verify saving the workflow
+- [ ] Verify the new workflow appears in the list
+- [ ] Verify the existence of a custom workflow
+- [ ] Verify editing a workflow
+- [ ] Verify adding a new status and transition
+- [ ] Verify the updated workflow appears correctly
+- [ ] Verify deleting a workflow
+- [ ] Verify the workflow is removed from the list after deletion",gpt-4o-2024-05-13,0.016689999999999997,None,2026-07-16 00:58:45
+US032,g19-alfred.txt,Smart Home / IoT,Medium,MedicalCaregiver,"to give corrective feedback if exercises are performed wrong, too much or in any other way harmful to the user",Benefit not explicitly stated.,Yes,1. Perform squat with knees past toes; verify visual 'Corrective' prompt on screen. 2. Perform 50 reps quickly; verify 'Rest' warning triggers. 3. Verify audio feedback option can be muted.,3,3,3.0,Fitness app domain. 'Give corrective feedback' is complex but clear. A2 noted that 'in any other way harmful' is too broad for QA to test.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Corrective Feedback for Exercises
+
+  Scenario: Exercise performed incorrectly
+    Given the user is performing an exercise
+    When the exercise is performed incorrectly
+    Then the MedicalCaregiver gives corrective feedback
+
+  Scenario: Exercise performed excessively
+    Given the user is performing an exercise
+    When the exercise is performed too much
+    Then the MedicalCaregiver gives corrective feedback
+
+  Scenario: Exercise performed in a harmful way
+    Given the user is performing an exercise
+    When the exercise is performed in a harmful way
+    Then the MedicalCaregiver gives corrective feedback
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('the user is performing an exercise')
+def step_given_user_performing_exercise(context):
+    context.exercise = ""ongoing""
+
+@when('the exercise is performed incorrectly')
+def step_when_exercise_incorrect(context):
+    context.exercise_status = ""incorrect""
+
+@when('the exercise is performed too much')
+def step_when_exercise_excessive(context):
+    context.exercise_status = ""excessive""
+
+@when('the exercise is performed in a harmful way')
+def step_when_exercise_harmful(context):
+    context.exercise_status = ""harmful""
+
+@then('the MedicalCaregiver gives corrective feedback')
+def step_then_give_corrective_feedback(context):
+    if context.exercise_status in [""incorrect"", ""excessive"", ""harmful""]:
+        context.feedback = ""corrective feedback given""
+    assert context.feedback == ""corrective feedback given""
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the user is performing an exercise.
+- [ ] Verify that the system can detect when an exercise is performed incorrectly.
+- [ ] Verify that the system can detect when an exercise is performed excessively.
+- [ ] Verify that the system can detect when an exercise is performed in a harmful way.
+- [ ] Verify that the MedicalCaregiver gives corrective feedback when the exercise is performed incorrectly.
+- [ ] Verify that the MedicalCaregiver gives corrective feedback when the exercise is performed excessively.
+- [ ] Verify that the MedicalCaregiver gives corrective feedback when the exercise is performed in a harmful way.
+- [ ] Verify that the corrective feedback is appropriate and actionable.
+- [ ] Verify that the feedback is given in a timely manner.
+- [ ] Verify that the feedback is logged for future reference.",gpt-4o-2024-05-13,0.00815,None,2026-07-16 00:58:47
+US033,g22-rdadmp.txt,Research Data Management (DMP),Simple,data manager,to know the security requirements of the data,I can check whether the data can be kept secure,Yes,"1. Open data asset; verify security badge ('Confidential') is visible. 2. Click badge to view detailed compliance requirements. 3. As guest user, verify highly secure assets are hidden.",4,4,4.0,"Security domain. 'Know the security requirements'. A1 found it passive. Needs an action-oriented goal (e.g., 'View security badge').","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Security Requirements of Data
+
+  Scenario: View security requirements of the data
+    Given I am a data manager
+    When I request the security requirements of the data
+    Then I should see the security requirements listed
+    And the requirements should include encryption standards
+    And the requirements should include access control policies
+    And the requirements should include data retention policies
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a data manager')
+def step_impl(context):
+    context.user_role = 'data manager'
+
+@when('I request the security requirements of the data')
+def step_impl(context):
+    context.security_requirements = get_security_requirements()
+
+@then('I should see the security requirements listed')
+def step_impl(context):
+    assert context.security_requirements is not None
+
+@then('the requirements should include encryption standards')
+def step_impl(context):
+    assert 'encryption standards' in context.security_requirements
+
+@then('the requirements should include access control policies')
+def step_impl(context):
+    assert 'access control policies' in context.security_requirements
+
+@then('the requirements should include data retention policies')
+def step_impl(context):
+    assert 'data retention policies' in context.security_requirements
+
+def get_security_requirements():
+    # This function would interact with the system to retrieve security requirements
+    return {
+        'encryption standards': 'AES-256',
+        'access control policies': 'Role-based access control',
+        'data retention policies': 'Data retained for 7 years'
+    }
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the user is identified as a data manager.
+- [ ] Verify that the security requirements can be requested.
+- [ ] Verify that the security requirements are listed.
+- [ ] Verify that the listed security requirements include encryption standards.
+- [ ] Verify that the listed security requirements include access control policies.
+- [ ] Verify that the listed security requirements include data retention policies.",gpt-4o-2024-05-13,0.0069050000000000005,None,2026-07-16 00:58:49
+US034,parabol_blog,Parabol: Developer Stories,Complex,developer,to implement a caching mechanism so that we can reduce page load times,we can reduce page load times,Yes,1. Load homepage (cold cache) - measure TTFB. 2. Reload homepage (warm cache) - verify TTFB < 200ms. 3. Update DB record; verify cache invalidates and UI shows new data.,2,3,2.0,"Performance task ('implement caching mechanism'). Annotators penalized it as it's an implementation detail, not a user-facing capability.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Implement caching mechanism to reduce page load times
+
+  Scenario: Cache is empty and a page is loaded
+    Given the cache is empty
+    When the user loads the page
+    Then the page should be fetched from the server
+    And the page should be stored in the cache
+
+  Scenario: Cache is populated and a page is loaded
+    Given the cache contains the page
+    When the user loads the page
+    Then the page should be fetched from the cache
+    And the page should not be fetched from the server
+
+  Scenario: Cache is expired and a page is loaded
+    Given the cache contains an expired page
+    When the user loads the page
+    Then the page should be fetched from the server
+    And the page should be updated in the cache
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from cache_system import Cache, fetch_page_from_server
+
+cache = Cache()
+
+@given('the cache is empty')
+def step_given_cache_is_empty(context):
+    cache.clear()
+
+@given('the cache contains the page')
+def step_given_cache_contains_page(context):
+    cache.store('page', 'cached content')
+
+@given('the cache contains an expired page')
+def step_given_cache_contains_expired_page(context):
+    cache.store('page', 'expired content', expired=True)
+
+@when('the user loads the page')
+def step_when_user_loads_page(context):
+    context.page_content = cache.get('page') or fetch_page_from_server('page')
+
+@then('the page should be fetched from the server')
+def step_then_page_fetched_from_server(context):
+    assert context.page_content == fetch_page_from_server('page')
+
+@then('the page should be stored in the cache')
+def step_then_page_stored_in_cache(context):
+    assert cache.get('page') == fetch_page_from_server('page')
+
+@then('the page should be fetched from the cache')
+def step_then_page_fetched_from_cache(context):
+    assert context.page_content == 'cached content'
+
+@then('the page should not be fetched from the server')
+def step_then_page_not_fetched_from_server(context):
+    assert context.page_content != fetch_page_from_server('page')
+
+@then('the page should be updated in the cache')
+def step_then_page_updated_in_cache(context):
+    assert cache.get('page') == fetch_page_from_server('page')
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the cache is empty initially.
+- [ ] Verify that the page is fetched from the server when the cache is empty.
+- [ ] Verify that the page is stored in the cache after being fetched from the server.
+- [ ] Verify that the page is fetched from the cache when it is already populated.
+- [ ] Verify that the page is not fetched from the server when it is already in the cache.
+- [ ] Verify that the page is fetched from the server when the cache contains an expired page.
+- [ ] Verify that the page is updated in the cache when the cache contains an expired page.",gpt-4o-2024-05-13,0.01019,None,2026-07-16 00:58:52
+US035,g10-scrumalliance.txt,Agile / Scrum,Complex,trainer,to copy one of my courses or events,I can create a new one,Yes,"Copied course retains all fields (name, date, description, fee); Copied event appears as a new draft, not published; Original course/event unchanged after copy; Trainer can edit the copy independently",5,5,5.0,"Concise, unambiguous CRUD copy story. Role (trainer), goal (copy), benefit (create new) all clear. Positive and negative paths easy to derive. High testability.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Copy Course or Event
+  As a trainer
+  I want to copy one of my courses or events
+  So that I can create a new one
+
+  Scenario: Copy a course
+    Given I am logged in as a trainer
+    And I have a course named ""Course A""
+    When I choose to copy the course ""Course A""
+    Then a new course should be created with the name ""Copy of Course A""
+    And the new course should have the same content as ""Course A""
+
+  Scenario: Copy an event
+    Given I am logged in as a trainer
+    And I have an event named ""Event A""
+    When I choose to copy the event ""Event A""
+    Then a new event should be created with the name ""Copy of Event A""
+    And the new event should have the same details as ""Event A""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a trainer')
+def step_impl(context):
+    context.trainer = Trainer()
+    context.trainer.login()
+
+@given('I have a course named ""{course_name}""')
+def step_impl(context, course_name):
+    context.course = Course(name=course_name)
+    context.trainer.add_course(context.course)
+
+@given('I have an event named ""{event_name}""')
+def step_impl(context, event_name):
+    context.event = Event(name=event_name)
+    context.trainer.add_event(context.event)
+
+@when('I choose to copy the course ""{course_name}""')
+def step_impl(context, course_name):
+    context.new_course = context.trainer.copy_course(course_name)
+
+@when('I choose to copy the event ""{event_name}""')
+def step_impl(context, event_name):
+    context.new_event = context.trainer.copy_event(event_name)
+
+@then('a new course should be created with the name ""Copy of {course_name}""')
+def step_impl(context, course_name):
+    expected_name = f""Copy of {course_name}""
+    assert context.new_course.name == expected_name
+
+@then('the new course should have the same content as ""{course_name}""')
+def step_impl(context, course_name):
+    original_course = context.trainer.get_course(course_name)
+    assert context.new_course.content == original_course.content
+
+@then('a new event should be created with the name ""Copy of {event_name}""')
+def step_impl(context, event_name):
+    expected_name = f""Copy of {event_name}""
+    assert context.new_event.name == expected_name
+
+@then('the new event should have the same details as ""{event_name}""')
+def step_impl(context, event_name):
+    original_event = context.trainer.get_event(event_name)
+    assert context.new_event.details == original_event.details
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the trainer is logged in.
+- [ ] Verify that the course to be copied exists.
+- [ ] Verify that the event to be copied exists.
+- [ ] Verify that a new course is created with the name ""Copy of {course_name}"".
+- [ ] Verify that the new course has the same content as the original course.
+- [ ] Verify that a new event is created with the name ""Copy of {event_name}"".
+- [ ] Verify that the new event has the same details as the original event.",gpt-4o-2024-05-13,0.01117,None,2026-07-16 00:58:54
+US036,g11-nsf.txt,Research Funding (NSF),Simple,NSF employee,to learn about how Github is used,I can participate in the issues as assigned,Yes,1. Trigger 'First time user' tour on issue board. 2. Click 'Next' through all 4 steps. 3. Verify 'Help' icon links to official GitHub docs.,4,4,4.0,"GitHub usage. 'Learn about how Github is used' is not a system feature, it's a documentation need. Both scored poorly.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Learn about how Github is used
+
+  Scenario: Access Github documentation
+    Given I am a logged-in NSF employee
+    When I navigate to the Github documentation page
+    Then I should see information on how Github is used
+
+  Scenario: Participate in assigned issues
+    Given I am a logged-in NSF employee
+    And I have been assigned an issue
+    When I navigate to the issues page
+    Then I should see the assigned issue
+    And I should be able to comment on the issue
+    And I should be able to change the status of the issue
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a logged-in NSF employee')
+def step_impl(context):
+    context.browser.get('https://github.com/login')
+    context.browser.find_element_by_id('login_field').send_keys('nsf_employee_username')
+    context.browser.find_element_by_id('password').send_keys('nsf_employee_password')
+    context.browser.find_element_by_name('commit').click()
+
+@when('I navigate to the Github documentation page')
+def step_impl(context):
+    context.browser.get('https://docs.github.com')
+
+@then('I should see information on how Github is used')
+def step_impl(context):
+    assert ""GitHub Docs"" in context.browser.title
+
+@given('I have been assigned an issue')
+def step_impl(context):
+    context.browser.get('https://github.com/nsf_employee_username/repo/issues')
+    assert context.browser.find_element_by_css_selector('.js-issue-row')
+
+@when('I navigate to the issues page')
+def step_impl(context):
+    context.browser.get('https://github.com/nsf_employee_username/repo/issues')
+
+@then('I should see the assigned issue')
+def step_impl(context):
+    assert context.browser.find_element_by_css_selector('.js-issue-row')
+
+@then('I should be able to comment on the issue')
+def step_impl(context):
+    context.browser.find_element_by_css_selector('.js-issue-row').click()
+    comment_box = context.browser.find_element_by_id('new_comment_field')
+    comment_box.send_keys('This is a test comment.')
+    context.browser.find_element_by_css_selector('.btn-primary').click()
+    assert ""This is a test comment."" in context.browser.page_source
+
+@then('I should be able to change the status of the issue')
+def step_impl(context):
+    context.browser.find_element_by_css_selector('.js-issue-row').click()
+    context.browser.find_element_by_css_selector('.js-issue-status-button').click()
+    assert ""Closed"" in context.browser.page_source or ""Open"" in context.browser.page_source
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the NSF employee can log in to Github.
+- [ ] Verify that the NSF employee can navigate to the Github documentation page.
+- [ ] Verify that the Github documentation page contains information on how Github is used.
+- [ ] Verify that the NSF employee can navigate to the issues page.
+- [ ] Verify that the assigned issue is visible to the NSF employee.
+- [ ] Verify that the NSF employee can comment on the assigned issue.
+- [ ] Verify that the NSF employee can change the status of the assigned issue.",gpt-4o-2024-05-13,0.010714999999999999,None,2026-07-16 00:58:57
+US037,g14-datahub.txt,Open Data Platform,Simple,Publisher,to permanently delete a data package,that it no longer takes up storage space,Yes,1. Click 'Delete Package'; see modal 'Type DELETE to confirm'. 2. Confirm; verify package vanishes from dashboard. 3. Check AWS S3 bucket to ensure actual objects are purged.,4,4,4.0,Data management. 'Permanently delete'. A1 noted it needs mention of cascading deletes or warnings. Good story otherwise.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Permanently delete a data package
+
+  Scenario: Successfully delete a data package
+    Given I am a logged-in Publisher
+    And I have a data package that I want to delete
+    When I choose to delete the data package
+    And I confirm the deletion
+    Then the data package should be permanently deleted
+    And the storage space should be freed up
+
+  Scenario: Cancel deletion of a data package
+    Given I am a logged-in Publisher
+    And I have a data package that I want to delete
+    When I choose to delete the data package
+    And I cancel the deletion
+    Then the data package should not be deleted
+    And the storage space should not be affected
+
+  Scenario: Attempt to delete a non-existent data package
+    Given I am a logged-in Publisher
+    When I attempt to delete a non-existent data package
+    Then I should receive an error message
+    And the storage space should not be affected
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a logged-in Publisher')
+def step_impl(context):
+    context.publisher = login_as_publisher()
+
+@given('I have a data package that I want to delete')
+def step_impl(context):
+    context.data_package = create_data_package()
+
+@when('I choose to delete the data package')
+def step_impl(context):
+    context.response = context.publisher.delete_data_package(context.data_package)
+
+@when('I confirm the deletion')
+def step_impl(context):
+    context.confirmation = confirm_deletion(context.response)
+
+@then('the data package should be permanently deleted')
+def step_impl(context):
+    assert context.data_package not in get_all_data_packages()
+
+@then('the storage space should be freed up')
+def step_impl(context):
+    assert check_storage_space_freed(context.data_package)
+
+@when('I cancel the deletion')
+def step_impl(context):
+    context.cancellation = cancel_deletion(context.response)
+
+@then('the data package should not be deleted')
+def step_impl(context):
+    assert context.data_package in get_all_data_packages()
+
+@then('the storage space should not be affected')
+def step_impl(context):
+    assert not check_storage_space_freed(context.data_package)
+
+@when('I attempt to delete a non-existent data package')
+def step_impl(context):
+    context.response = context.publisher.delete_data_package('non_existent_package')
+
+@then('I should receive an error message')
+def step_impl(context):
+    assert 'error' in context.response
+
+@then('the storage space should not be affected')
+def step_impl(context):
+    assert not check_storage_space_freed('non_existent_package')
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the user is logged in as a Publisher.
+- [ ] Verify that the data package exists before attempting deletion.
+- [ ] Verify that the user can initiate the deletion process.
+- [ ] Verify that the user can confirm the deletion.
+- [ ] Verify that the data package is permanently deleted upon confirmation.
+- [ ] Verify that storage space is freed up after deletion.
+- [ ] Verify that the user can cancel the deletion process.
+- [ ] Verify that the data package remains intact if deletion is canceled.
+- [ ] Verify that storage space is unaffected if deletion is canceled.
+- [ ] Verify that an error message is shown when attempting to delete a non-existent data package.
+- [ ] Verify that storage space is unaffected when attempting to delete a non-existent data package.",gpt-4o-2024-05-13,0.011515,None,2026-07-16 00:59:00
+US038,parabol_blog,Parabol: Banking Systems,Medium,customer,"to categorize my transactions, so I can better understand and manage my spending habits",I can better understand and manage my spending habits,Yes,"1. Click unassigned transaction, select 'Groceries' category. 2. Setup rule: 'All Walmart = Groceries'; verify past transactions update. 3. View pie chart with updated category totals.",3,3,3.0,"Banking/PFM. 'Categorize transactions'. Very clear 'so I can' clause. Both annotators agreed it's a solid, testable story.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Categorize Transactions
+  As a customer
+  I want to categorize my transactions
+  So I can better understand and manage my spending habits
+
+  Scenario: Categorize a single transaction
+    Given I have a transaction of $50 at ""Grocery Store""
+    When I categorize the transaction as ""Groceries""
+    Then the transaction should be categorized as ""Groceries""
+
+  Scenario: Categorize multiple transactions
+    Given I have transactions of $50 at ""Grocery Store"" and $30 at ""Restaurant""
+    When I categorize the first transaction as ""Groceries"" and the second transaction as ""Dining""
+    Then the first transaction should be categorized as ""Groceries""
+    And the second transaction should be categorized as ""Dining""
+
+  Scenario: Change the category of a transaction
+    Given I have a transaction of $50 at ""Grocery Store"" categorized as ""Groceries""
+    When I change the category to ""Dining""
+    Then the transaction should be categorized as ""Dining""
+
+  Scenario: View categorized transactions
+    Given I have transactions categorized as ""Groceries"" and ""Dining""
+    When I view my transactions
+    Then I should see transactions categorized as ""Groceries"" and ""Dining""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I have a transaction of ${amount} at ""{merchant}""')
+def step_given_transaction(context, amount, merchant):
+    context.transactions = [{'amount': amount, 'merchant': merchant, 'category': None}]
+
+@given('I have transactions of ${amount1} at ""{merchant1}"" and ${amount2} at ""{merchant2}""')
+def step_given_multiple_transactions(context, amount1, merchant1, amount2, merchant2):
+    context.transactions = [
+        {'amount': amount1, 'merchant': merchant1, 'category': None},
+        {'amount': amount2, 'merchant': merchant2, 'category': None}
+    ]
+
+@when('I categorize the transaction as ""{category}""')
+def step_when_categorize_transaction(context, category):
+    context.transactions[0]['category'] = category
+
+@when('I categorize the first transaction as ""{category1}"" and the second transaction as ""{category2}""')
+def step_when_categorize_multiple_transactions(context, category1, category2):
+    context.transactions[0]['category'] = category1
+    context.transactions[1]['category'] = category2
+
+@when('I change the category to ""{category}""')
+def step_when_change_category(context, category):
+    context.transactions[0]['category'] = category
+
+@then('the transaction should be categorized as ""{category}""')
+def step_then_transaction_categorized(context, category):
+    assert context.transactions[0]['category'] == category
+
+@then('the first transaction should be categorized as ""{category1}""')
+def step_then_first_transaction_categorized(context, category1):
+    assert context.transactions[0]['category'] == category1
+
+@then('the second transaction should be categorized as ""{category2}""')
+def step_then_second_transaction_categorized(context, category2):
+    assert context.transactions[1]['category'] == category2
+
+@given('I have transactions categorized as ""Groceries"" and ""Dining""')
+def step_given_categorized_transactions(context):
+    context.transactions = [
+        {'amount': 50, 'merchant': 'Grocery Store', 'category': 'Groceries'},
+        {'amount': 30, 'merchant': 'Restaurant', 'category': 'Dining'}
+    ]
+
+@when('I view my transactions')
+def step_when_view_transactions(context):
+    pass  # This step is a placeholder for viewing transactions
+
+@then('I should see transactions categorized as ""Groceries"" and ""Dining""')
+def step_then_view_categorized_transactions(context):
+    categories = [transaction['category'] for transaction in context.transactions]
+    assert 'Groceries' in categories
+    assert 'Dining' in categories
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that a single transaction can be categorized.
+- [ ] Verify that multiple transactions can be categorized individually.
+- [ ] Verify that the category of a transaction can be changed.
+- [ ] Verify that categorized transactions are displayed correctly.
+- [ ] Verify that transactions retain their categories after being viewed.
+- [ ] Verify that the system handles invalid categories gracefully.
+- [ ] Verify that the system handles edge cases such as empty transactions or null values.",gpt-4o-2024-05-13,0.01452,None,2026-07-16 00:59:04
+US039,g25-duraspace.txt,Digital Repository (DuraSpace),Medium,repository manager,"to compose collections, limiting the collection to the items sharing the same provenance, limiting the collection to represent a part of a collection have a singular provenance, or assembly a collection from other collections and objects",Benefit not explicitly stated.,Yes,1. Select 5 items with provenance 'Batch A'; group into 'Collection A'. 2. Select 'Collection A' and 'Item B'; form 'Collection C' (nested). 3. Verify hierarchy renders correctly in tree view.,3,3,3.0,"Archive domain. Extremely verbose and complex goal ('compose collections, limiting...'). A1 penalized due to unreadable structure.","**1. Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Compose Collections
+
+  Scenario: Limit collection to items sharing the same provenance
+    Given I am a repository manager
+    When I compose a collection
+    Then the collection should be limited to items sharing the same provenance
+
+  Scenario: Limit collection to represent a part of a collection with singular provenance
+    Given I am a repository manager
+    When I compose a collection
+    Then the collection should represent a part of a collection with singular provenance
+
+  Scenario: Assemble a collection from other collections and objects
+    Given I am a repository manager
+    When I compose a collection
+    Then I should be able to assemble a collection from other collections and objects
+```
+
+**2. Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a repository manager')
+def step_given_repository_manager(context):
+    context.user_role = 'repository manager'
+
+@when('I compose a collection')
+def step_when_compose_collection(context):
+    context.collection = compose_collection()
+
+@then('the collection should be limited to items sharing the same provenance')
+def step_then_limit_to_same_provenance(context):
+    assert context.collection.is_limited_to_same_provenance()
+
+@then('the collection should represent a part of a collection with singular provenance')
+def step_then_represent_part_with_singular_provenance(context):
+    assert context.collection.represents_part_with_singular_provenance()
+
+@then('I should be able to assemble a collection from other collections and objects')
+def step_then_assemble_from_collections_and_objects(context):
+    assert context.collection.can_assemble_from_collections_and_objects()
+```
+
+**3. Validation Checklist:**
+
+- [ ] Verify that the user is identified as a repository manager.
+- [ ] Ensure the collection can be composed.
+- [ ] Validate that the collection is limited to items sharing the same provenance.
+- [ ] Confirm that the collection represents a part of a collection with singular provenance.
+- [ ] Check that the collection can be assembled from other collections and objects.",gpt-4o-2024-05-13,0.00708,None,2026-07-16 00:59:06
+US040,g24-unibath.txt,University Research Archive,Complex,depositor,to deposit arbitrarily large files,I am not limited in what files I can and cannot deposit,Yes,"1. Initiate 50GB file upload via web UI. 2. Disconnect WiFi at 50%, reconnect, verify upload resumes. 3. Post-upload, verify file checksum matches local file.",4,4,4.0,"Archive domain. 'Arbitrarily large files' is a testing nightmare. A2 flagged this for scope definition, resulting in a mid-tier score.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Deposit arbitrarily large files
+
+  Scenario: Successfully deposit a large file
+    Given I am a registered depositor
+    When I upload a file larger than 1GB
+    Then the file should be successfully deposited
+    And I should receive a confirmation message
+
+  Scenario: Fail to deposit a file due to network interruption
+    Given I am a registered depositor
+    When I upload a file larger than 1GB
+    And the network is interrupted
+    Then the file should not be deposited
+    And I should receive an error message
+
+  Scenario: Fail to deposit a file due to insufficient storage
+    Given I am a registered depositor
+    When I upload a file larger than 1GB
+    And there is insufficient storage space
+    Then the file should not be deposited
+    And I should receive an error message
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am a registered depositor')
+def step_impl(context):
+    context.depositor = Depositor()
+    assert context.depositor.is_registered()
+
+@when('I upload a file larger than 1GB')
+def step_impl(context):
+    context.file = generate_large_file(size_in_gb=2)
+    context.upload_result = context.depositor.upload_file(context.file)
+
+@when('the network is interrupted')
+def step_impl(context):
+    simulate_network_interruption()
+
+@when('there is insufficient storage space')
+def step_impl(context):
+    simulate_insufficient_storage()
+
+@then('the file should be successfully deposited')
+def step_impl(context):
+    assert context.upload_result.success
+
+@then('I should receive a confirmation message')
+def step_impl(context):
+    assert context.upload_result.message == ""File successfully deposited""
+
+@then('the file should not be deposited')
+def step_impl(context):
+    assert not context.upload_result.success
+
+@then('I should receive an error message')
+def step_impl(context):
+    assert context.upload_result.message == ""Error: File could not be deposited""
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the depositor is registered.
+- [ ] Verify that a file larger than 1GB can be generated.
+- [ ] Verify that the file upload process completes successfully for large files.
+- [ ] Verify that a confirmation message is received upon successful deposit.
+- [ ] Simulate network interruption and verify that the file is not deposited.
+- [ ] Verify that an error message is received when the network is interrupted.
+- [ ] Simulate insufficient storage and verify that the file is not deposited.
+- [ ] Verify that an error message is received when there is insufficient storage.",gpt-4o-2024-05-13,0.00893,None,2026-07-16 00:59:09
+US041,g05-openspending.txt,Open Data Publishing,Complex,Data Consuming User,to see textual descriptions that accompany embedded visualisations,I can more easily understand what I am viewing,Yes,Visualisation displayed with accompanying text description; Description appears adjacent to or below the chart; Description updates when visualisation data changes; Page renders correctly when no description is provided,4,3,4.0,"Clear accessibility/comprehension story. Benefit ('understand what I am viewing') is concrete. Annotator 2 noted 'textual descriptions' could mean tooltip, caption, or alt-text — ambiguity in implementation spec.","### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Display textual descriptions for visualisations
+
+  Scenario: Display textual description for a single visualisation
+    Given a visualisation is embedded in the application
+    When the user views the visualisation
+    Then a textual description should be displayed alongside the visualisation
+
+  Scenario: Display textual descriptions for multiple visualisations
+    Given multiple visualisations are embedded in the application
+    When the user views the visualisations
+    Then textual descriptions should be displayed alongside each visualisation
+
+  Scenario: No visualisation present
+    Given no visualisation is embedded in the application
+    When the user views the application
+    Then no textual description should be displayed
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('a visualisation is embedded in the application')
+def step_given_visualisation_embedded(context):
+    context.visualisation = True
+
+@given('multiple visualisations are embedded in the application')
+def step_given_multiple_visualisations_embedded(context):
+    context.visualisations = [True, True]
+
+@given('no visualisation is embedded in the application')
+def step_given_no_visualisation_embedded(context):
+    context.visualisation = False
+
+@when('the user views the visualisation')
+def step_when_user_views_visualisation(context):
+    context.user_views = True
+
+@when('the user views the visualisations')
+def step_when_user_views_visualisations(context):
+    context.user_views = True
+
+@when('the user views the application')
+def step_when_user_views_application(context):
+    context.user_views = True
+
+@then('a textual description should be displayed alongside the visualisation')
+def step_then_textual_description_displayed(context):
+    assert context.visualisation and context.user_views
+
+@then('textual descriptions should be displayed alongside each visualisation')
+def step_then_textual_descriptions_displayed(context):
+    assert all(context.visualisations) and context.user_views
+
+@then('no textual description should be displayed')
+def step_then_no_textual_description_displayed(context):
+    assert not context.visualisation and context.user_views
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that a textual description is displayed when a single visualisation is embedded.
+- [ ] Verify that textual descriptions are displayed for each visualisation when multiple visualisations are embedded.
+- [ ] Verify that no textual description is displayed when no visualisation is embedded.
+- [ ] Ensure that textual descriptions are correctly aligned with their respective visualisations.
+- [ ] Check that the textual descriptions are clear and informative.
+- [ ] Validate that the application handles the absence of visualisations gracefully without displaying any textual descriptions.
+- [ ] Confirm that the user interface remains consistent and user-friendly when textual descriptions are displayed.",gpt-4o-2024-05-13,0.009105,None,2026-07-16 00:59:12
+US042,g26-racdam.txt,Digital Asset Management,Medium,archivist,to track use of a photo,I know if I've sent it to a researcher before,Yes,1. View Photo Details; see 'Downloads: 14'. 2. Click count to open log; view timestamps and User IDs. 3. Export usage log to CSV.,4,4,4.0,Photo management. Benefit 'I know if I've sent it' is very practical. Both annotators gave high marks. Good real-world context.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Track use of a photo
+
+  Scenario: Archivist sends a photo to a researcher for the first time
+    Given the photo ""photo123"" is not marked as sent
+    When the archivist sends the photo ""photo123"" to the researcher ""researcherA""
+    Then the photo ""photo123"" should be marked as sent to ""researcherA""
+
+  Scenario: Archivist checks if a photo has been sent to a researcher
+    Given the photo ""photo123"" is marked as sent to ""researcherA""
+    When the archivist checks if the photo ""photo123"" has been sent to ""researcherA""
+    Then the system should confirm that the photo ""photo123"" has been sent to ""researcherA""
+
+  Scenario: Archivist sends a photo to a researcher that has already been sent
+    Given the photo ""photo123"" is marked as sent to ""researcherA""
+    When the archivist sends the photo ""photo123"" to the researcher ""researcherA""
+    Then the system should notify the archivist that the photo ""photo123"" has already been sent to ""researcherA""
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+photos_sent = {}
+
+@given('the photo ""{photo_id}"" is not marked as sent')
+def step_given_photo_not_marked_as_sent(context, photo_id):
+    photos_sent[photo_id] = []
+
+@given('the photo ""{photo_id}"" is marked as sent to ""{researcher_id}""')
+def step_given_photo_marked_as_sent(context, photo_id, researcher_id):
+    photos_sent[photo_id] = [researcher_id]
+
+@when('the archivist sends the photo ""{photo_id}"" to the researcher ""{researcher_id}""')
+def step_when_archivist_sends_photo(context, photo_id, researcher_id):
+    if researcher_id not in photos_sent[photo_id]:
+        photos_sent[photo_id].append(researcher_id)
+        context.notification = None
+    else:
+        context.notification = f'The photo ""{photo_id}"" has already been sent to ""{researcher_id}""'
+
+@when('the archivist checks if the photo ""{photo_id}"" has been sent to ""{researcher_id}""')
+def step_when_archivist_checks_photo(context, photo_id, researcher_id):
+    context.photo_sent = researcher_id in photos_sent[photo_id]
+
+@then('the photo ""{photo_id}"" should be marked as sent to ""{researcher_id}""')
+def step_then_photo_marked_as_sent(context, photo_id, researcher_id):
+    assert researcher_id in photos_sent[photo_id], f'Photo {photo_id} not marked as sent to {researcher_id}'
+
+@then('the system should confirm that the photo ""{photo_id}"" has been sent to ""{researcher_id}""')
+def step_then_system_confirms_photo_sent(context, photo_id, researcher_id):
+    assert context.photo_sent, f'System did not confirm that photo {photo_id} has been sent to {researcher_id}'
+
+@then('the system should notify the archivist that the photo ""{photo_id}"" has already been sent to ""{researcher_id}""')
+def step_then_system_notifies_archivist(context, photo_id, researcher_id):
+    assert context.notification == f'The photo ""{photo_id}"" has already been sent to ""{researcher_id}""', \
+        f'Expected notification not received'
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that a photo can be marked as sent to a researcher.
+- [ ] Verify that the system can check if a photo has been sent to a specific researcher.
+- [ ] Verify that the system notifies the archivist if a photo has already been sent to the same researcher.
+- [ ] Verify that the system does not mark a photo as sent to a researcher if it has already been marked.
+- [ ] Verify that the system correctly updates the status of a photo when it is sent to a new researcher.
+- [ ] Verify that the system maintains a list of researchers to whom a photo has been sent.
+- [ ] Verify that the system handles multiple photos and researchers correctly.",gpt-4o-2024-05-13,0.013675,None,2026-07-16 00:59:15
+US043,g03-loudoun.txt,Government Services,Simple,Applicant,to Submit Supporting Documentation,I can satisfy documentation requirements for my application,Yes,"1. Upload 3 PDFs (Tax Form, ID, Statement) simultaneously. 2. Attempt to upload .exe file (rejected). 3. Submit application, verify all 3 docs are attached to reviewer payload.",4,4,4.0,"Application portal. 'Submit Supporting Documentation'. Clear goal, but role is generic. Solid story overall.","### (1) Gherkin Scenarios in .feature Format
+
+```gherkin
+Feature: Submit Supporting Documentation
+
+  Scenario: Successfully submit supporting documentation
+    Given I am an applicant
+    And I have completed my application form
+    When I upload the required supporting documents
+    And I click the submit button
+    Then I should see a confirmation message
+    And my documents should be marked as submitted
+
+  Scenario: Fail to submit supporting documentation due to missing documents
+    Given I am an applicant
+    And I have completed my application form
+    When I attempt to submit without uploading all required documents
+    Then I should see an error message indicating missing documents
+    And my documents should not be marked as submitted
+
+  Scenario: Fail to submit supporting documentation due to invalid file format
+    Given I am an applicant
+    And I have completed my application form
+    When I upload a document in an invalid file format
+    And I click the submit button
+    Then I should see an error message indicating invalid file format
+    And my documents should not be marked as submitted
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+
+@given('I am an applicant')
+def step_impl(context):
+    context.applicant = Applicant()
+
+@given('I have completed my application form')
+def step_impl(context):
+    context.applicant.complete_application_form()
+
+@when('I upload the required supporting documents')
+def step_impl(context):
+    context.applicant.upload_supporting_documents()
+
+@when('I click the submit button')
+def step_impl(context):
+    context.applicant.click_submit_button()
+
+@then('I should see a confirmation message')
+def step_impl(context):
+    assert context.applicant.get_confirmation_message() == ""Your documents have been submitted successfully.""
+
+@then('my documents should be marked as submitted')
+def step_impl(context):
+    assert context.applicant.documents_status() == ""submitted""
+
+@when('I attempt to submit without uploading all required documents')
+def step_impl(context):
+    context.applicant.attempt_submit_without_all_documents()
+
+@then('I should see an error message indicating missing documents')
+def step_impl(context):
+    assert context.applicant.get_error_message() == ""Please upload all required documents.""
+
+@then('my documents should not be marked as submitted')
+def step_impl(context):
+    assert context.applicant.documents_status() != ""submitted""
+
+@when('I upload a document in an invalid file format')
+def step_impl(context):
+    context.applicant.upload_invalid_format_document()
+
+@then('I should see an error message indicating invalid file format')
+def step_impl(context):
+    assert context.applicant.get_error_message() == ""Invalid file format. Please upload a valid document.""
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify that the applicant can access the document submission page.
+- [ ] Verify that the applicant can upload supporting documents.
+- [ ] Verify that the submit button is enabled after uploading documents.
+- [ ] Verify that a confirmation message is displayed upon successful submission.
+- [ ] Verify that documents are marked as submitted after successful submission.
+- [ ] Verify that an error message is displayed if the applicant attempts to submit without uploading all required documents.
+- [ ] Verify that documents are not marked as submitted if submission fails due to missing documents.
+- [ ] Verify that an error message is displayed if the applicant uploads a document in an invalid file format.
+- [ ] Verify that documents are not marked as submitted if submission fails due to invalid file format.",gpt-4o-2024-05-13,0.011175000000000001,None,2026-07-16 00:59:19
+US044,g16-mis.txt,Management Information System,Medium,DigitalRecords Archivist,to view and download summary embargo metadata for all ETDs in the repository,Benefit not explicitly stated.,Yes,"1. Click 'Export Embargoes'. 2. Open resulting CSV; verify columns: Title, Author, Embargo End Date. 3. Log in as student; verify export button is completely hidden.",3,2,2.0,"Missing benefit. 'View and download summary embargo metadata'. Highly specific to ETDs, but format is incomplete without the 'so that'.","**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: View and download summary embargo metadata for all ETDs
+
+  Scenario: View summary embargo metadata for all ETDs
+    Given I am logged in as a DigitalRecords Archivist
+    When I navigate to the ETD repository
+    And I request to view summary embargo metadata
+    Then I should see the summary embargo metadata for all ETDs
+
+  Scenario: Download summary embargo metadata for all ETDs
+    Given I am logged in as a DigitalRecords Archivist
+    When I navigate to the ETD repository
+    And I request to download summary embargo metadata
+    Then a file containing the summary embargo metadata for all ETDs should be downloaded
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a DigitalRecords Archivist')
+def step_impl(context):
+    context.browser.visit(context.base_url + '/login')
+    context.browser.fill('username', 'archivist')
+    context.browser.fill('password', 'password')
+    context.browser.find_by_value('Login').click()
+
+@when('I navigate to the ETD repository')
+def step_impl(context):
+    context.browser.visit(context.base_url + '/etd-repository')
+
+@when('I request to view summary embargo metadata')
+def step_impl(context):
+    context.browser.find_by_id('view-embargo-metadata').click()
+
+@then('I should see the summary embargo metadata for all ETDs')
+def step_impl(context):
+    assert context.browser.is_text_present('Summary Embargo Metadata')
+
+@when('I request to download summary embargo metadata')
+def step_impl(context):
+    context.browser.find_by_id('download-embargo-metadata').click()
+
+@then('a file containing the summary embargo metadata for all ETDs should be downloaded')
+def step_impl(context):
+    # Assuming the file is downloaded to a predefined directory
+    import os
+    assert os.path.exists('/path/to/download/directory/embargo_metadata.csv')
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the DigitalRecords Archivist can log in successfully.
+- [ ] Verify that the DigitalRecords Archivist can navigate to the ETD repository.
+- [ ] Verify that the option to view summary embargo metadata is available.
+- [ ] Verify that the summary embargo metadata for all ETDs is displayed correctly.
+- [ ] Verify that the option to download summary embargo metadata is available.
+- [ ] Verify that the file containing the summary embargo metadata is downloaded successfully.
+- [ ] Verify that the downloaded file contains the correct summary embargo metadata for all ETDs.",gpt-4o-2024-05-13,0.008719999999999999,None,2026-07-16 00:59:21
+US045,g18-neurohub.txt,Neuroscience Research Platform,Medium,researcher,to have the ability to attach detailed meta data to the data and entries that I create,Benefit not explicitly stated.,Yes,"1. Open entry #102; add custom field key='Source', value='Field Survey'. 2. Edit 'Source' to 'Lab Test'. 3. API query filtering by metadata key 'Source' returns correct entry.",3,2,2.0,Data entry. 'Attach detailed meta data'. A1 flagged 'detailed' as ambiguous. Resolved to lower score to encourage clarity.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Attach detailed meta data to data and entries
+
+  Scenario: Attach meta data to a new data entry
+    Given I am a logged-in researcher
+    When I create a new data entry
+    And I attach detailed meta data to the entry
+    Then the meta data should be saved with the entry
+
+  Scenario: View meta data of an existing data entry
+    Given I am a logged-in researcher
+    And I have an existing data entry with meta data
+    When I view the data entry
+    Then I should see the attached meta data
+
+  Scenario: Edit meta data of an existing data entry
+    Given I am a logged-in researcher
+    And I have an existing data entry with meta data
+    When I edit the meta data of the entry
+    And I save the changes
+    Then the updated meta data should be saved with the entry
+
+  Scenario: Delete meta data from an existing data entry
+    Given I am a logged-in researcher
+    And I have an existing data entry with meta data
+    When I delete the meta data from the entry
+    And I save the changes
+    Then the meta data should be removed from the entry
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a logged-in researcher')
+def step_impl(context):
+    context.researcher = login_as_researcher()
+
+@when('I create a new data entry')
+def step_impl(context):
+    context.entry = create_new_data_entry()
+
+@when('I attach detailed meta data to the entry')
+def step_impl(context):
+    context.meta_data = attach_meta_data(context.entry)
+
+@then('the meta data should be saved with the entry')
+def step_impl(context):
+    assert context.entry.meta_data == context.meta_data
+
+@given('I have an existing data entry with meta data')
+def step_impl(context):
+    context.entry = get_existing_data_entry_with_meta_data()
+
+@when('I view the data entry')
+def step_impl(context):
+    context.viewed_entry = view_data_entry(context.entry)
+
+@then('I should see the attached meta data')
+def step_impl(context):
+    assert context.viewed_entry.meta_data == context.entry.meta_data
+
+@when('I edit the meta data of the entry')
+def step_impl(context):
+    context.updated_meta_data = edit_meta_data(context.entry)
+
+@when('I save the changes')
+def step_impl(context):
+    save_changes(context.entry)
+
+@then('the updated meta data should be saved with the entry')
+def step_impl(context):
+    assert context.entry.meta_data == context.updated_meta_data
+
+@when('I delete the meta data from the entry')
+def step_impl(context):
+    delete_meta_data(context.entry)
+
+@then('the meta data should be removed from the entry')
+def step_impl(context):
+    assert context.entry.meta_data is None
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that a researcher can log in successfully.
+- [ ] Verify that a researcher can create a new data entry.
+- [ ] Verify that detailed meta data can be attached to a new data entry.
+- [ ] Verify that the attached meta data is saved with the new data entry.
+- [ ] Verify that a researcher can view an existing data entry with meta data.
+- [ ] Verify that the meta data is visible when viewing the data entry.
+- [ ] Verify that a researcher can edit the meta data of an existing data entry.
+- [ ] Verify that the updated meta data is saved with the data entry.
+- [ ] Verify that a researcher can delete the meta data from an existing data entry.
+- [ ] Verify that the meta data is removed from the data entry after deletion.",gpt-4o-2024-05-13,0.012215,None,2026-07-16 00:59:24
+US046,g19-alfred.txt,Smart Home / IoT,Simple,MedicalCaregiver,to have ALFRED to offer training for specific muscle groups,Benefit not explicitly stated.,Yes,1. Select 'Chest' from muscle group filter; see only bench press/pushup plans. 2. Verify ALFRED system generates dynamic 4-week calendar for selected group. 3. Check progress bar updates per muscle.,2,3,2.0,"Fitness domain. 'ALFRED to offer training'. 'ALFRED' is the system, not the user. Annotators penalized because it's written from system's perspective.","**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Training for specific muscle groups
+
+  Scenario: MedicalCaregiver requests training for a specific muscle group
+    Given I am a MedicalCaregiver
+    When I request training for the ""upper body"" muscle group
+    Then ALFRED should offer training for the ""upper body"" muscle group
+
+  Scenario: MedicalCaregiver requests training for another specific muscle group
+    Given I am a MedicalCaregiver
+    When I request training for the ""lower body"" muscle group
+    Then ALFRED should offer training for the ""lower body"" muscle group
+
+  Scenario: MedicalCaregiver requests training for an invalid muscle group
+    Given I am a MedicalCaregiver
+    When I request training for the ""unknown"" muscle group
+    Then ALFRED should notify that the muscle group is invalid
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am a MedicalCaregiver')
+def step_impl(context):
+    context.user_role = 'MedicalCaregiver'
+
+@when('I request training for the ""{muscle_group}"" muscle group')
+def step_impl(context, muscle_group):
+    context.requested_muscle_group = muscle_group
+    context.response = ALFRED.offer_training(muscle_group)
+
+@then('ALFRED should offer training for the ""{muscle_group}"" muscle group')
+def step_impl(context, muscle_group):
+    assert context.response == f""Training offered for {muscle_group} muscle group""
+
+@then('ALFRED should notify that the muscle group is invalid')
+def step_impl(context):
+    assert context.response == ""Invalid muscle group""
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the user role is set to MedicalCaregiver.
+- [ ] Verify that ALFRED can offer training for the ""upper body"" muscle group.
+- [ ] Verify that ALFRED can offer training for the ""lower body"" muscle group.
+- [ ] Verify that ALFRED notifies the user when an invalid muscle group is requested.
+- [ ] Verify that the response message for valid muscle groups is correctly formatted.
+- [ ] Verify that the response message for invalid muscle groups is correctly formatted.",gpt-4o-2024-05-13,0.007625,None,2026-07-16 00:59:26
+US047,g02-federalspending.txt,Federal Spending,Simple,user,to access the raw agency published files from FABS via USAspending,Benefit not explicitly stated.,Yes,"1. Access USAspending portal, locate FABS dataset. 2. Click 'Download Raw XML'; verify file size is non-zero. 3. Verify XML schema matches federal standard.",2,2,2.0,Data portal. 'Access raw agency published files'. Missing benefit. Straightforward but incomplete format.,"### (1) Gherkin Scenarios in .feature format
+
+```gherkin
+Feature: Access raw agency published files from FABS via USAspending
+
+  Scenario: User accesses the raw agency published files
+    Given the user is on the USAspending homepage
+    When the user navigates to the FABS section
+    And the user selects the option to view raw agency published files
+    Then the raw agency published files should be displayed
+```
+
+### (2) Step Definitions in Python
+
+```python
+from behave import given, when, then
+from selenium import webdriver
+
+@given('the user is on the USAspending homepage')
+def step_impl(context):
+    context.browser = webdriver.Chrome()
+    context.browser.get('https://www.usaspending.gov')
+
+@when('the user navigates to the FABS section')
+def step_impl(context):
+    fabs_section = context.browser.find_element_by_link_text('FABS')
+    fabs_section.click()
+
+@when('the user selects the option to view raw agency published files')
+def step_impl(context):
+    raw_files_option = context.browser.find_element_by_link_text('Raw Agency Published Files')
+    raw_files_option.click()
+
+@then('the raw agency published files should be displayed')
+def step_impl(context):
+    raw_files_displayed = context.browser.find_element_by_id('raw-files')
+    assert raw_files_displayed.is_displayed()
+    context.browser.quit()
+```
+
+### (3) Validation Checklist
+
+- [ ] Verify the user can access the USAspending homepage.
+- [ ] Verify the user can navigate to the FABS section.
+- [ ] Verify the user can select the option to view raw agency published files.
+- [ ] Verify the raw agency published files are displayed correctly.",gpt-4o-2024-05-13,0.005825,None,2026-07-16 00:59:28
+US048,g18-neurohub.txt,Neuroscience Research Platform,Complex,systems administrator,to install Neurohub dependencies into an Ubuntu 10.04 LTS machine using the normal Ubuntu package management tools,Benefit not explicitly stated.,Yes,1. Run 'sudo apt-get install neurohub-deps' on clean Ubuntu 10.04 VM. 2. Run 'neurohub --version' to confirm successful launch. 3. Run on Ubuntu 22.04; verify graceful OS unsupported error.,2,2,2.0,DevOps task ('install Neurohub dependencies into Ubuntu 10.04'). Complete anti-pattern. Both annotators rejected it as a user story.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Install Neurohub dependencies on Ubuntu 10.04 LTS
+
+  Scenario: Update package list
+    Given I have an Ubuntu 10.04 LTS machine
+    When I update the package list
+    Then the package list should be updated successfully
+
+  Scenario: Install Neurohub dependencies
+    Given I have an updated package list
+    When I install Neurohub dependencies
+    Then the dependencies should be installed successfully
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+import subprocess
+
+@given('I have an Ubuntu 10.04 LTS machine')
+def step_given_ubuntu_machine(context):
+    # Assuming the machine is already Ubuntu 10.04 LTS
+    pass
+
+@when('I update the package list')
+def step_when_update_package_list(context):
+    result = subprocess.run(['sudo', 'apt-get', 'update'], capture_output=True, text=True)
+    context.update_result = result
+
+@then('the package list should be updated successfully')
+def step_then_package_list_updated(context):
+    assert context.update_result.returncode == 0, ""Package list update failed""
+
+@given('I have an updated package list')
+def step_given_updated_package_list(context):
+    result = subprocess.run(['sudo', 'apt-get', 'update'], capture_output=True, text=True)
+    assert result.returncode == 0, ""Package list update failed""
+
+@when('I install Neurohub dependencies')
+def step_when_install_dependencies(context):
+    dependencies = [""dependency1"", ""dependency2"", ""dependency3""]  # Replace with actual dependencies
+    result = subprocess.run(['sudo', 'apt-get', 'install', '-y'] + dependencies, capture_output=True, text=True)
+    context.install_result = result
+
+@then('the dependencies should be installed successfully')
+def step_then_dependencies_installed(context):
+    assert context.install_result.returncode == 0, ""Dependencies installation failed""
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the machine is running Ubuntu 10.04 LTS.
+- [ ] Ensure that the package list can be updated without errors.
+- [ ] Confirm that the package list update completes successfully.
+- [ ] Check that the Neurohub dependencies are listed correctly.
+- [ ] Validate that the dependencies can be installed without errors.
+- [ ] Confirm that the dependencies installation completes successfully.",gpt-4o-2024-05-13,0.008164999999999999,None,2026-07-16 00:59:30
+US049,g10-scrumalliance.txt,Agile / Scrum,Simple,CSM,to be charged a fee once I am approved for Practitioner status,my certification status can be activated,Yes,1. Admin sets user to 'Approved'; user receives payment link. 2. User pays $50 via Stripe; status auto-changes to 'Practitioner'. 3. Test card declined scenario; status remains 'Pending Payment'.,3,4,4.0,"Certification domain. 'Be charged a fee'. A bit weird to have a goal to be charged, but business logic makes sense. Rated well.","**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Charging a fee upon approval for Practitioner status
+
+  Scenario: CSM is charged a fee upon approval for Practitioner status
+    Given the CSM has applied for Practitioner status
+    And the CSM's application is approved
+    When the CSM's status is updated to Practitioner
+    Then the CSM should be charged the appropriate fee
+    And the CSM's certification status should be activated
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('the CSM has applied for Practitioner status')
+def step_impl(context):
+    context.csm.apply_for_practitioner_status()
+
+@given('the CSM\'s application is approved')
+def step_impl(context):
+    context.csm.approve_application()
+
+@when('the CSM\'s status is updated to Practitioner')
+def step_impl(context):
+    context.csm.update_status_to_practitioner()
+
+@then('the CSM should be charged the appropriate fee')
+def step_impl(context):
+    assert context.csm.is_fee_charged() == True
+
+@then('the CSM\'s certification status should be activated')
+def step_impl(context):
+    assert context.csm.is_certification_activated() == True
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the CSM has applied for Practitioner status.
+- [ ] Verify that the CSM's application is approved.
+- [ ] Verify that the CSM's status is updated to Practitioner.
+- [ ] Verify that the CSM is charged the appropriate fee upon status update.
+- [ ] Verify that the CSM's certification status is activated after the fee is charged.",gpt-4o-2024-05-13,0.005915,None,2026-07-16 00:59:32
+US050,g14-datahub.txt,Open Data Platform,Simple,Publisher,to have private data packages,I can share just with my team,Yes,1. Create package 'Q1 Data'; set to 'Private'. 2. Share via email with teammate; teammate can access. 3. Share URL with external account; verify 403 Access Denied.,4,4,4.0,Data sharing. 'Have private data packages'. Clear benefit ('share just with my team'). Annotators agreed on high value.,"**(1) Gherkin Scenarios in .feature format:**
+
+```gherkin
+Feature: Private Data Packages
+
+  Scenario: Create a private data package
+    Given I am logged in as a Publisher
+    When I create a new data package
+    And I set the data package visibility to private
+    Then the data package should be marked as private
+    And only my team should have access to the data package
+
+  Scenario: Share a private data package with team
+    Given I have a private data package
+    When I share the data package with my team
+    Then my team should receive access to the data package
+    And no one outside my team should have access to the data package
+
+  Scenario: Verify access restrictions on private data package
+    Given I have a private data package
+    When a user outside my team tries to access the data package
+    Then the user should be denied access
+```
+
+**(2) Step Definitions in Python:**
+
+```python
+from behave import given, when, then
+
+@given('I am logged in as a Publisher')
+def step_impl(context):
+    context.publisher = login_as_publisher()
+
+@when('I create a new data package')
+def step_impl(context):
+    context.data_package = create_data_package()
+
+@when('I set the data package visibility to private')
+def step_impl(context):
+    context.data_package.set_visibility('private')
+
+@then('the data package should be marked as private')
+def step_impl(context):
+    assert context.data_package.visibility == 'private'
+
+@then('only my team should have access to the data package')
+def step_impl(context):
+    assert context.data_package.accessible_by(context.publisher.team)
+
+@given('I have a private data package')
+def step_impl(context):
+    context.data_package = create_data_package()
+    context.data_package.set_visibility('private')
+
+@when('I share the data package with my team')
+def step_impl(context):
+    context.data_package.share_with(context.publisher.team)
+
+@then('my team should receive access to the data package')
+def step_impl(context):
+    for member in context.publisher.team:
+        assert context.data_package.accessible_by(member)
+
+@then('no one outside my team should have access to the data package')
+def step_impl(context):
+    non_team_user = get_non_team_user()
+    assert not context.data_package.accessible_by(non_team_user)
+
+@when('a user outside my team tries to access the data package')
+def step_impl(context):
+    context.access_attempt = context.data_package.access_by(get_non_team_user())
+
+@then('the user should be denied access')
+def step_impl(context):
+    assert context.access_attempt == 'denied'
+```
+
+**(3) Validation Checklist:**
+
+- [ ] Verify that the Publisher can log in successfully.
+- [ ] Verify that the Publisher can create a new data package.
+- [ ] Verify that the Publisher can set the data package visibility to private.
+- [ ] Verify that the data package is marked as private.
+- [ ] Verify that only the Publisher's team has access to the private data package.
+- [ ] Verify that the Publisher can share the private data package with their team.
+- [ ] Verify that the team members receive access to the private data package.
+- [ ] Verify that no one outside the Publisher's team has access to the private data package.
+- [ ] Verify that a user outside the Publisher's team is denied access to the private data package.",gpt-4o-2024-05-13,0.010995000000000001,None,2026-07-16 00:59:35
